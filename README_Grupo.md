@@ -320,3 +320,20 @@ git push origin main
 - ❌ NO copiar código sin entender
 
 ---
+
+## 📊 Estado del Proyecto
+
+| Problema | Integrante | Rama | Carpeta | Estado | Progreso |
+|----------|------------|------|---------|--------|----------|
+| 1. Ocho Reinas | Josu | `ramaJosu` | `EightQueens/` | ✅ Completado | 100% |
+| 2. 8 Puzzle | Marlon Guevara | `ramaMarlon` | `Problema2_8Puzzle/` | ⏳ Pendiente | 0% |
+| 3. Juego Galleta | Hiedi | `ramaHiedi` | `Problema3_JuegoGalleta/` | ⏳ Pendiente | 0% |
+| 4. Sudoku | Viviana | `ramaViviana` | `Problema4_Sudoku/` | ⏳ Pendiente | 0% |
+
+**Leyenda de estados:**
+- ✅ Completado
+- 🚧 En progreso
+- ⏳ Pendiente
+- ❌ Bloqueado
+
+---
