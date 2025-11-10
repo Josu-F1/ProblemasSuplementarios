@@ -1,0 +1,287 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Inicio";
+}
+
+@model EightQueens.Web.Models.EightQueensViewModel
+
+<div class="page-header">
+    <h1><i class="fas fa-chess-queen text-warning me-3"></i>Problema de las 8 Reinas</h1>
+    <p class="lead">Algoritmo de Inteligencia Artificial - Backtracking</p>
+</div>
+
+<!-- Formulario de configuración -->
+<div class="row mb-4">
+    <div class="col-md-8 mx-auto">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h5 class="card-title text-center mb-4">
+                    <i class="fas fa-cogs text-primary me-2"></i>Configuración del Problema
+                </h5>
+                
+                @using (Html.BeginForm("Solve", "EightQueens", FormMethod.Post, new { @class = "text-center" }))
+                {
+                    <div class="row align-items-end">
+                        <div class="col-md-6 mb-3">
+                            <label for="boardSize" class="form-label fw-bold">Tamaño del Tablero (N×N):</label>
+                            <select name="boardSize" id="boardSize" class="form-select form-select-lg">
+                                <option value="4" selected="@(Model.BoardSize == 4)">4×4 (2 soluciones)</option>
+                                <option value="5" selected="@(Model.BoardSize == 5)">5×5 (10 soluciones)</option>
+                                <option value="6" selected="@(Model.BoardSize == 6)">6×6 (4 soluciones)</option>
+                                <option value="7" selected="@(Model.BoardSize == 7)">7×7 (40 soluciones)</option>
+                                <option value="8" selected="@(Model.BoardSize == 8)">8×8 (92 soluciones)</option>
+                                <option value="9" selected="@(Model.BoardSize == 9)">9×9 (352 soluciones)</option>
+                                <option value="10" selected="@(Model.BoardSize == 10)">10×10 (724 soluciones)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button type="submit" class="btn btn-uta-primary btn-lg w-100">
+                                <i class="fas fa-play me-2"></i>Resolver Problema
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mensaje de estado -->
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert @(Model.IsSolved && Model.TotalSolutions > 0 ? "alert-success" : "alert-danger") alert-uta animate-fade-in">
+        <i class="fas @(Model.IsSolved && Model.TotalSolutions > 0 ? "fa-check-circle" : "fa-exclamation-triangle") me-2"></i>
+        @Model.StatusMessage
+    </div>
+}
+
+<!-- Información de resultados -->
+@if (Model.IsSolved && Model.TotalSolutions > 0)
+{
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm bg-light">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <h3 class="text-primary"><i class="fas fa-chess-board me-2"></i>@Model.BoardSize×@Model.BoardSize</h3>
+                                <p class="text-muted mb-0">Tablero</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <h3 class="text-success"><i class="fas fa-trophy me-2"></i>@Model.TotalSolutions</h3>
+                                <p class="text-muted mb-0">Soluciones</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <h3 class="text-info"><i class="fas fa-clock me-2"></i>@Model.ExecutionTimeMs.ToString("F2") ms</h3>
+                                <p class="text-muted mb-0">Tiempo</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <h3 class="text-warning"><i class="fas fa-cogs me-2"></i>@Model.Algorithm</h3>
+                                <p class="text-muted mb-0">Algoritmo</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navegación de soluciones -->
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-chess-queen text-warning me-2"></i>
+                    Solución <span id="current-solution">1</span> de @Model.TotalSolutions
+                </h4>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary" onclick="previousSolution()" id="prev-btn">
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" onclick="nextSolution()" id="next-btn">
+                        Siguiente <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tablero de ajedrez -->
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card border-0 shadow">
+                <div class="card-body p-4">
+                    <div id="chess-board-container" class="text-center">
+                        <!-- El tablero se genera dinámicamente con JavaScript -->
+                    </div>
+                    <div class="mt-3 text-center">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Coordenadas: <span id="queen-coordinates">Cargando...</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .chess-board {
+        display: inline-block;
+        border: 4px solid var(--uta-blue-primary);
+        border-radius: 10px;
+        background: var(--uta-blue-primary);
+        padding: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .chess-row {
+        display: flex;
+        margin: 0;
+    }
+
+    .chess-cell {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        border: 1px solid #333;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .chess-cell.light {
+        background-color: var(--board-light);
+        color: var(--uta-blue-primary);
+    }
+
+    .chess-cell.dark {
+        background-color: var(--board-dark);
+        color: var(--uta-white);
+    }
+
+    .chess-cell.queen {
+        background: radial-gradient(circle, var(--queen-gold), #ffed4a);
+        color: var(--uta-blue-primary);
+        font-weight: bold;
+        animation: pulse 2s infinite;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .chess-cell .queen-icon {
+        filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+    }
+
+    @@keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .stat-item h3 {
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+
+    .coordinate-display {
+        background: var(--uta-gray-light);
+        border-radius: 15px;
+        padding: 10px 15px;
+        margin-top: 15px;
+        font-family: 'Courier New', monospace;
+    }
+</style>
+
+@section Scripts {
+<script>
+    let solutions = @Html.Raw(Json.Serialize(Model.Solutions));
+    let currentIndex = 0;
+    let boardSize = @Model.BoardSize;
+
+    function renderBoard(boardData) {
+        const container = document.getElementById('chess-board-container');
+        const board = document.createElement('div');
+        board.className = 'chess-board';
+        
+        for (let row = 0; row < boardSize; row++) {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'chess-row';
+            
+            for (let col = 0; col < boardSize; col++) {
+                const cell = document.createElement('div');
+                cell.className = `chess-cell ${(row + col) % 2 === 0 ? 'light' : 'dark'}`;
+                
+                // Verificar si hay una reina en esta posición
+                if (boardData.queenPositions[row] === col) {
+                    cell.classList.add('queen');
+                    cell.innerHTML = '<span class="queen-icon">♛</span>';
+                }
+                
+                rowDiv.appendChild(cell);
+            }
+            board.appendChild(rowDiv);
+        }
+        
+        container.innerHTML = '';
+        container.appendChild(board);
+        
+        // Actualizar coordenadas
+        document.getElementById('queen-coordinates').textContent = boardData.queenCoordinates;
+    }
+
+    function previousSolution() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateSolution();
+        }
+    }
+
+    function nextSolution() {
+        if (currentIndex < solutions.length - 1) {
+            currentIndex++;
+            updateSolution();
+        }
+    }
+
+    function updateSolution() {
+        document.getElementById('current-solution').textContent = currentIndex + 1;
+        renderBoard(solutions[currentIndex]);
+        
+        // Actualizar botones
+        document.getElementById('prev-btn').disabled = currentIndex === 0;
+        document.getElementById('next-btn').disabled = currentIndex === solutions.length - 1;
+    }
+
+    // Inicializar al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        @if (Model.IsSolved && Model.TotalSolutions > 0)
+        {
+            <text>
+            renderBoard(solutions[0]);
+            updateSolution();
+            </text>
+        }
+    });
+
+    // Navegación con teclado
+    document.addEventListener('keydown', function(e) {
+        if (solutions.length > 0) {
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+                previousSolution();
+            } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+                nextSolution();
+            }
+        }
+    });
+</script>
+}
