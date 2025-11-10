@@ -1,0 +1,241 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\problema4_sudoku\\wwwroot\\js\\sudoku.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:wwwroot\\js\\sudoku.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\problema4_sudoku\\controllers\\sudokucontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:controllers\\sudokucontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\problema4_sudoku\\strategies\\backtrackingstrategy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:strategies\\backtrackingstrategy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\problema4_sudoku\\strategies\\isearchstrategy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:strategies\\isearchstrategy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\problema4_sudoku\\problema4_sudoku.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:problema4_sudoku.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\problema4_sudoku\\services\\sudokusolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:services\\sudokusolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\problema4_sudoku\\services\\isudokusolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:services\\isudokusolver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\problema4_sudoku\\services\\puzzleprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:services\\puzzleprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\problema4_sudoku\\services\\ipuzzleprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:services\\ipuzzleprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\problema4_sudoku\\services\\sudokuvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:services\\sudokuvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\problema4_sudoku\\services\\isudokuvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:services\\isudokuvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\problema4_sudoku\\models\\sudokuboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:models\\sudokuboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\problema4_sudoku\\models\\cell.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:models\\cell.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "sudoku.js",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\wwwroot\\js\\sudoku.js",
+              "RelativeDocumentMoniker": "wwwroot\\js\\sudoku.js",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\wwwroot\\js\\sudoku.js",
+              "RelativeToolTip": "wwwroot\\js\\sudoku.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-11-10T01:44:36.351Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "SudokuController.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Controllers\\SudokuController.cs",
+              "RelativeDocumentMoniker": "Controllers\\SudokuController.cs",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Controllers\\SudokuController.cs",
+              "RelativeToolTip": "Controllers\\SudokuController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T01:31:27.525Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BacktrackingStrategy.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Strategies\\BacktrackingStrategy.cs",
+              "RelativeDocumentMoniker": "Strategies\\BacktrackingStrategy.cs",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Strategies\\BacktrackingStrategy.cs",
+              "RelativeToolTip": "Strategies\\BacktrackingStrategy.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T01:30:55.996Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ISearchStrategy.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Strategies\\ISearchStrategy.cs",
+              "RelativeDocumentMoniker": "Strategies\\ISearchStrategy.cs",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Strategies\\ISearchStrategy.cs",
+              "RelativeToolTip": "Strategies\\ISearchStrategy.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T01:30:42.75Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "SudokuSolver.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Services\\SudokuSolver.cs",
+              "RelativeDocumentMoniker": "Services\\SudokuSolver.cs",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Services\\SudokuSolver.cs",
+              "RelativeToolTip": "Services\\SudokuSolver.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T01:30:01.19Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ISudokuSolver.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Services\\ISudokuSolver.cs",
+              "RelativeDocumentMoniker": "Services\\ISudokuSolver.cs",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Services\\ISudokuSolver.cs",
+              "RelativeToolTip": "Services\\ISudokuSolver.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T01:29:47.555Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PuzzleProvider.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Services\\PuzzleProvider.cs",
+              "RelativeDocumentMoniker": "Services\\PuzzleProvider.cs",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Services\\PuzzleProvider.cs",
+              "RelativeToolTip": "Services\\PuzzleProvider.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T01:29:34.845Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "IPuzzleProvider.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Services\\IPuzzleProvider.cs",
+              "RelativeDocumentMoniker": "Services\\IPuzzleProvider.cs",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Services\\IPuzzleProvider.cs",
+              "RelativeToolTip": "Services\\IPuzzleProvider.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T01:29:20.462Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Problema4_Sudoku",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Problema4_Sudoku.csproj",
+              "RelativeDocumentMoniker": "Problema4_Sudoku.csproj",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Problema4_Sudoku.csproj",
+              "RelativeToolTip": "Problema4_Sudoku.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-11-10T01:28:15.332Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SudokuValidator.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Services\\SudokuValidator.cs",
+              "RelativeDocumentMoniker": "Services\\SudokuValidator.cs",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Services\\SudokuValidator.cs",
+              "RelativeToolTip": "Services\\SudokuValidator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T01:29:05.511Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ISudokuValidator.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Services\\ISudokuValidator.cs",
+              "RelativeDocumentMoniker": "Services\\ISudokuValidator.cs",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Services\\ISudokuValidator.cs",
+              "RelativeToolTip": "Services\\ISudokuValidator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T01:28:49.2Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "SudokuBoard.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Models\\SudokuBoard.cs",
+              "RelativeDocumentMoniker": "Models\\SudokuBoard.cs",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Models\\SudokuBoard.cs",
+              "RelativeToolTip": "Models\\SudokuBoard.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T01:27:41.225Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Cell.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Models\\Cell.cs",
+              "RelativeDocumentMoniker": "Models\\Cell.cs",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku\\Models\\Cell.cs",
+              "RelativeToolTip": "Models\\Cell.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-10T01:27:00.682Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
