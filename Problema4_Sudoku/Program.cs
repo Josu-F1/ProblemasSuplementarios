@@ -6,31 +6,31 @@ namespace Problema4_Sudoku
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
+// MVC
+builder.Services.AddControllersWithViews();
 
-            var app = builder.Build();
+// DI de servicios (DIP + Strategy)
+builder.Services.AddSingleton<Problema4_Sudoku.Services.ISudokuValidator, Problema4_Sudoku.Services.SudokuValidator>();
+builder.Services.AddSingleton<Problema4_Sudoku.Services.IPuzzleProvider, Problema4_Sudoku.Services.PuzzleProvider>();
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+var app = builder.Build();
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
 
-            app.UseRouting();
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 
-            app.UseAuthorization();
+app.UseRouting();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Sudoku}/{action=Index}/{id?}");
 
-            app.Run();
+app.Run();
         }
     }
 }

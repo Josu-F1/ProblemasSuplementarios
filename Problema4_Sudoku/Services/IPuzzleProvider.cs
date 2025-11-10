@@ -1,6 +1,9 @@
-﻿namespace Problema4_Sudoku.Services
+﻿using Problema4_Sudoku.Models;
+
+namespace Problema4_Sudoku.Services;
+
+public interface IPuzzleProvider
 {
-    public class IPuzzleProvider
-    {
-    }
+    SudokuBoard GetDemo(int idx=0);
 }
+
