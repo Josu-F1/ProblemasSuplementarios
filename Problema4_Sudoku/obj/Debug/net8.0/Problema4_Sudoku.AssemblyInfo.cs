@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Problema4_Sudoku")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6bbe7a25e13090dd848a3102ae9055dddb520270")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3b3bba08cc17b135dcd50519db27fc6dc9757a7a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Problema4_Sudoku")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Problema4_Sudoku")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
