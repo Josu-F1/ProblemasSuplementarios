@@ -1,0 +1,253 @@
+@{
+    Layout = "_Layout";
+}
+
+<div class="d-flex flex-column align-items-center">
+    <h2 class="mb-2">8-Puzzle</h2>
+    <p class="text-muted">Juega o pide al servidor que lo resuelva con A* (Manhattan). Haz clic en una casilla adyacente al espacio vacío para moverla.</p>
+
+    <div class="card p-3 shadow-sm" style="width:320px;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+                <button id="shuffle" class="btn btn-sm btn-outline-primary me-2">Rehacer</button>
+                <button id="solve" class="btn btn-sm btn-primary">Resolver</button>
+            </div>
+            <div class="text-end">
+                <div>Movimientos: <span id="moveCount">0</span></div>
+                <div class="small text-muted">Velocidad: <input id="speed" type="range" min="50" max="1000" value="300"></div>
+            </div>
+        </div>
+
+        <div id="board" class="mx-auto" style="width:260px; height:260px; display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+            <!-- tiles -->
+        </div>
+        <div id="status" class="mt-2 small text-center text-muted"></div>
+    </div>
+    
+    <div class="card mt-3 p-3" style="width:320px">
+        <h6>Información</h6>
+        <div class="small text-muted mb-2">Patrón y algoritmo usados por el solucionador:</div>
+        <div id="solverInfo">
+            <div>Algoritmo: <strong id="alg">-</strong></div>
+            <div>Heurística: <strong id="heur">-</strong></div>
+            <div>Patrón: <strong id="pat">-</strong></div>
+        </div>
+        <hr />
+        <div>
+            <div class="small text-muted">Movimientos del usuario (clics):</div>
+            <div id="userMoves" style="min-height:32px"></div>
+        </div>
+    </div>
+
+    <div id="solvedOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); align-items:center; justify-content:center; z-index:1050;">
+        <div style="background:white; padding:30px; border-radius:12px; text-align:center; width:340px; box-shadow:0 10px 30px rgba(0,0,0,0.3)">
+            <div style="font-size:48px; color:#28a745"><i class="fas fa-check-circle"></i></div>
+            <h3>¡Puzzle resuelto!</h3>
+            <p id="solvedDetail" class="text-muted">En X movimientos</p>
+            <button id="closeSolved" class="btn btn-success">Cerrar</button>
+        </div>
+    </div>
+
+    <div id="confettiContainer" style="position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:1040;"></div>
+</div>
+
+<style>
+    #board .tile{
+        background: linear-gradient(180deg, #fff, #f1f6ff);
+        border-radius: 10px;
+        display:flex; align-items:center; justify-content:center;
+        font-weight:700; font-size:1.6rem; color:#003d7a; cursor:pointer;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+        user-select:none; border: none;
+    }
+    #board .tile.blank{ background: linear-gradient(180deg,#e9eef8,#f8fbff); cursor:default; }
+    #board .tile:active{ transform: scale(.98); }
+    #board .tile.moved{ transform: translateY(-6px) scale(1.02); box-shadow: 0 12px 20px rgba(0,0,0,0.12); background: linear-gradient(90deg,#dff4ff,#e6fff8); }
+
+    /* Confetti animation */
+    .confetti{
+        position:absolute; width:10px; height:14px; opacity:0.9; transform:translateY(-100vh);
+        animation: fall linear forwards; border-radius:2px;
+    }
+    @@keyframes fall { to { transform: translateY(120vh) rotate(360deg); opacity:0.95; } }
+</style>
+
+<script>
+    let tiles = [1,2,3,4,5,6,7,8,0];
+    let moveCount = 0;
+    let userMoves = []; // e.g. ['Up','Left']
+
+    function render(){
+        const board = document.getElementById('board');
+        board.innerHTML = '';
+        tiles.forEach((v,i)=>{
+            const btn = document.createElement('button');
+            btn.className = 'tile';
+            btn.dataset.index = i;
+            btn.style.height = '80px';
+            btn.style.fontSize = '26px';
+            if (v===0){ btn.classList.add('blank'); btn.textContent = ''; }
+            else { btn.textContent = v; }
+            btn.onclick = ()=> onCellClick(i);
+            board.appendChild(btn);
+        });
+        document.getElementById('moveCount').textContent = moveCount;
+    }
+
+    function onCellClick(i){
+        const bi = tiles.indexOf(0);
+        const br = Math.floor(bi/3), bc = bi%3, r=Math.floor(i/3), c=i%3;
+        const man = Math.abs(br-r)+Math.abs(bc-c);
+        if (man===1){
+            // animate moved tile after swap
+            const movingValue = tiles[i];
+            // compute direction
+            let dir = null;
+            if (r < br) dir = 'Up';
+            else if (r > br) dir = 'Down';
+            else if (c < bc) dir = 'Left';
+            else if (c > bc) dir = 'Right';
+            [tiles[bi], tiles[i]] = [tiles[i], tiles[bi]];
+            render();
+            animateTileByValue(movingValue);
+            moveCount++;
+            if (dir) { userMoves.push(dir); renderUserMoves(); }
+            document.getElementById('status').textContent = '';
+            // check if user solved
+            if (isGoal()) { showSolved(moveCount, true); }
+        }
+    }
+
+    function isGoal(){
+        const goal = [1,2,3,4,5,6,7,8,0];
+        for(let i=0;i<9;i++) if (tiles[i] !== goal[i]) return false;
+        return true;
+    }
+
+    function animateTileByValue(value){
+        // find tile element with given value, add moved class briefly
+        const nodes = Array.from(document.querySelectorAll('#board .tile'));
+        const node = nodes.find(n=>n.textContent==value);
+        if (!node) return;
+        node.classList.add('moved');
+        setTimeout(()=> node.classList.remove('moved'), 260);
+    }
+
+    function shuffle(){
+        do{
+            for(let i=tiles.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [tiles[i], tiles[j]]=[tiles[j], tiles[i]]; }
+        } while(!isSolvable());
+        moveCount = 0; userMoves = []; renderUserMoves(); document.getElementById('status').textContent=''; render();
+    }
+
+    function isSolvable(){
+        const arr=tiles.filter(x=>x!==0);
+        let inv=0; for(let i=0;i<arr.length;i++) for(let j=i+1;j<arr.length;j++) if(arr[i]>arr[j]) inv++;
+        return inv%2===0;
+    }
+
+    document.getElementById('shuffle').onclick = ()=> shuffle();
+
+    document.getElementById('solve').onclick = async ()=>{
+        document.getElementById('status').textContent='Resolviendo...';
+        const res = await fetch('/EightPuzzle/Solve', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(tiles)});
+        if(!res.ok){ const txt=await res.text(); document.getElementById('status').textContent='Error: '+txt; return; }
+        const data = await res.json();
+        if(!data.moves || data.moves.length===0){ document.getElementById('status').textContent='No hay movimientos'; return; }
+        document.getElementById('status').textContent = `Solución: ${data.moves.length} movimientos`;
+        // show solver info
+        document.getElementById('alg').textContent = data.algorithm ?? '-';
+        document.getElementById('heur').textContent = data.heuristic ?? '-';
+        document.getElementById('pat').textContent = data.pattern ?? '-';
+        // animate moves sequentially
+        const speed = ()=> parseInt(document.getElementById('speed').value);
+        for(const mv of data.moves){
+            await new Promise(r=>setTimeout(r, speed()));
+            const movingValue = getMovingTileValueForMove(mv);
+            applyMove(mv);
+            render();
+            animateTileByValue(movingValue);
+            moveCount++;
+        }
+        // show solved overlay (computer)
+        showSolved(data.moves.length, false, data);
+    };
+
+    function getMovingTileValueForMove(mv){
+        const dir = mv;
+        const bi = tiles.indexOf(0); // current blank after any previous moves
+        // the moving tile will be adjacent in opposite direction of the move to the blank AFTER applying move
+        // But we need the value BEFORE applying move; easier: simulate reverse on a copy
+        const copy = tiles.slice();
+        // apply move to copy to find which tile moved
+        const biCopy = copy.indexOf(0);
+        const br = Math.floor(biCopy/3), bc = biCopy%3;
+        let tr=br, tc=bc;
+        if(dir==='Up') tr = br-1; if(dir==='Down') tr = br+1; if(dir==='Left') tc = bc-1; if(dir==='Right') tc = bc+1;
+        if(tr<0||tr>2||tc<0||tc>2) return null;
+        const ti = tr*3+tc;
+        return copy[ti];
+    }
+
+    function applyMove(mv){
+        const dir = mv;
+        const bi = tiles.indexOf(0); const br=Math.floor(bi/3), bc=bi%3;
+        let tr=br, tc=bc;
+        if(dir==='Up') tr = br-1; if(dir==='Down') tr = br+1; if(dir==='Left') tc = bc-1; if(dir==='Right') tc = bc+1;
+        if(tr<0||tr>2||tc<0||tc>2) return;
+        const ti = tr*3+tc; [tiles[bi], tiles[ti]]=[tiles[ti], tiles[bi]];
+    }
+
+    function showSolved(moves){
+        // legacy
+        showSolved(moves, false);
+    }
+    
+    function showSolved(moves, userSolved=false, solverData=null){
+        const overlay = document.getElementById('solvedOverlay');
+        if (userSolved){
+            document.getElementById('solvedDetail').textContent = `Usuario: en ${moves} movimientos`;
+            // show user's move list
+            document.getElementById('solvedDetail').innerHTML += `<br/><div class="mt-2">Movimientos: ${userMoves.join(', ')}</div>`;
+        } else {
+            let info = '';
+            if (solverData){ info = `<div class="mt-2 small text-muted">Alg: ${solverData.algorithm}, Heur: ${solverData.heuristic}</div>`; }
+            document.getElementById('solvedDetail').innerHTML = `Computador: en ${moves} movimientos ${info}`;
+        }
+        overlay.style.display = 'flex';
+        launchConfetti(80);
+    }
+
+    function renderUserMoves(){
+        const c = document.getElementById('userMoves');
+        c.innerHTML = userMoves.map((m,i)=>`<span class="badge bg-light text-muted me-1">${i+1}. ${m}</span>`).join('');
+    }
+    document.getElementById('closeSolved').onclick = ()=>{
+        document.getElementById('solvedOverlay').style.display = 'none';
+        document.getElementById('confettiContainer').innerHTML = '';
+    };
+
+    function launchConfetti(n){
+        const c = document.getElementById('confettiContainer');
+        c.innerHTML = '';
+        for(let i=0;i<n;i++){
+            const el = document.createElement('div');
+            el.className = 'confetti';
+            el.style.left = Math.random()*100 + '%';
+            el.style.background = `hsl(${Math.random()*360},70%,60%)`;
+            el.style.animationDuration = (Math.random()*1.2 + 0.8) + 's';
+            el.style.transform = `translateY(-120vh) rotate(${Math.random()*360}deg)`;
+            el.style.top = (-10 - Math.random()*20) + 'vh';
+            el.style.opacity = 0.95;
+            el.style.width = (6 + Math.random()*8) + 'px';
+            el.style.height = (8 + Math.random()*10) + 'px';
+            c.appendChild(el);
+            // remove after animation
+            setTimeout(()=> el.remove(), 3000);
+        }
+    }
+
+    // init
+    shuffle();
+</script>
