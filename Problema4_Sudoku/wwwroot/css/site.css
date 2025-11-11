@@ -18,5 +18,7 @@ h1 { margin-bottom: 12px; }
 }
 .cell-input.fixed { background:#eee; color:#000; }
 
-.cell-input.invalid { background:#ffd7d7; }
-.cell-input.valid { background:#e9ffe9; }
+
+.cell-input.invalid { background:#ffd7d7; outline:2px solid #dc2626; }
+.cell-input.valid   { background:#e9ffe9; outline:2px solid #16a34a; }
+

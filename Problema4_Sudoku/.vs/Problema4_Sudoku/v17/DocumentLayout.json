@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:wwwroot\\js\\sudoku.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\views\\sudoku\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:views\\sudoku\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|c:\\users\\admin\\source\\repos\\problemassuplementarios\\problema4_sudoku\\controllers\\sudokucontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{27990709-0093-4AA0-9E83-96FCB3B04355}|Problema4_Sudoku.csproj|solutionrelative:controllers\\sudokucontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -62,8 +66,20 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Views\\Sudoku\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Sudoku\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Views\\Sudoku\\Index.cshtml",
+              "RelativeToolTip": "Views\\Sudoku\\Index.cshtml",
+              "ViewState": "AgIAAAIAAACgMTMzMzMbwBAAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-10T22:45:39.786Z"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -72,26 +88,26 @@
               "RelativeDocumentMoniker": "wwwroot\\js\\sudoku.js",
               "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\wwwroot\\js\\sudoku.js",
               "RelativeToolTip": "wwwroot\\js\\sudoku.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
               "WhenOpened": "2025-11-10T01:44:36.351Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "SudokuController.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Controllers\\SudokuController.cs",
               "RelativeDocumentMoniker": "Controllers\\SudokuController.cs",
               "ToolTip": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Controllers\\SudokuController.cs",
               "RelativeToolTip": "Controllers\\SudokuController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAC8AAACAjpmZmZkgwGEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-10T01:31:27.525Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "BacktrackingStrategy.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Strategies\\BacktrackingStrategy.cs",
               "RelativeDocumentMoniker": "Strategies\\BacktrackingStrategy.cs",
@@ -103,7 +119,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "ISearchStrategy.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Strategies\\ISearchStrategy.cs",
               "RelativeDocumentMoniker": "Strategies\\ISearchStrategy.cs",
@@ -115,7 +131,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "SudokuSolver.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Services\\SudokuSolver.cs",
               "RelativeDocumentMoniker": "Services\\SudokuSolver.cs",
@@ -127,7 +143,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "ISudokuSolver.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Services\\ISudokuSolver.cs",
               "RelativeDocumentMoniker": "Services\\ISudokuSolver.cs",
@@ -139,7 +155,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "PuzzleProvider.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Services\\PuzzleProvider.cs",
               "RelativeDocumentMoniker": "Services\\PuzzleProvider.cs",
@@ -151,7 +167,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "IPuzzleProvider.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Services\\IPuzzleProvider.cs",
               "RelativeDocumentMoniker": "Services\\IPuzzleProvider.cs",
@@ -163,7 +179,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Problema4_Sudoku.csproj",
               "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Problema4_Sudoku.csproj",
               "RelativeDocumentMoniker": "Problema4_Sudoku.csproj",
@@ -175,7 +191,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "SudokuValidator.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Services\\SudokuValidator.cs",
               "RelativeDocumentMoniker": "Services\\SudokuValidator.cs",
@@ -187,7 +203,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "ISudokuValidator.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Services\\ISudokuValidator.cs",
               "RelativeDocumentMoniker": "Services\\ISudokuValidator.cs",
@@ -199,7 +215,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "SudokuBoard.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Models\\SudokuBoard.cs",
               "RelativeDocumentMoniker": "Models\\SudokuBoard.cs",
@@ -211,7 +227,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "Cell.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\source\\repos\\ProblemasSuplementarios\\Problema4_Sudoku\\Models\\Cell.cs",
               "RelativeDocumentMoniker": "Models\\Cell.cs",

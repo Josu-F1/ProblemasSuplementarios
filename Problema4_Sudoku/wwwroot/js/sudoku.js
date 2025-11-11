@@ -99,3 +99,59 @@ document.addEventListener('input', (e) => {
   if (val === '') { e.target.classList.remove('valid','invalid'); return; }
   if (!/^[1-9]$/.test(val)) { e.target.value = ''; e.target.classList.remove('valid','invalid'); }
 });
+
+
+async function checkBoard() {
+  // Limpia clases previas
+  qa('.cell-input').forEach(el => el.classList.remove('valid','invalid'));
+
+  const board = readBoard();
+  const res = await fetch('/Sudoku/Validate', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ board })
+  });
+  const data = await res.json();
+
+  if (!data.valid) {
+    // Marca celdas en conflicto
+    (data.errors || []).forEach(err => {
+      const el = q(`.cell-input[data-r="${err.r}"][data-c="${err.c}"]`);
+      if (el) el.classList.add('invalid');
+    });
+    q('#status').textContent = `Hay ${data.errors.length} conflicto(s). Revisa las celdas en rojo.`;
+  } else {
+    // Todo consistente con reglas
+    if (data.solved) {
+      qa('.cell-input').forEach(el => el.classList.add('valid'));
+      q('#status').textContent = '¡Correcto! Tablero completo y válido ';
+    } else {
+      q('#status').textContent = 'Hasta ahora todo va bien  (aún no está completo).';
+    }
+  }
+}
+
+document.addEventListener('click', (e) => {
+  if (e.target.id === 'btnCheck') checkBoard();
+  // ya existían:
+  if (e.target.id === 'btnDemo') loadDemo();
+  if (e.target.id === 'btnClear') clearBoard();
+  if (e.target.id === 'btnSolve') solveInstant();
+  if (e.target.id === 'btnStep') solveSteps();
+});
+
+// Validación en vivo: ejecuta checkBoard brevemente después de editar
+let liveTimer = null;
+document.addEventListener('input', (e) => {
+  if (!e.target.classList.contains('cell-input')) return;
+
+  // (ya tenías la validación 1..9)
+  const val = e.target.value.trim();
+  if (val !== '' && !/^[1-9]$/.test(val)) { e.target.value = ''; return; }
+
+  // si está activado el live check, valida con debounce
+  if (q('#liveCheck')?.checked) {
+    clearTimeout(liveTimer);
+    liveTimer = setTimeout(checkBoard, 180);
+  }
+});
