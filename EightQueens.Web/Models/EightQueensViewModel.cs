@@ -36,7 +36,7 @@ namespace EightQueens.Web.Models
         /// <summary>
         /// Algoritmo utilizado para resolver
         /// </summary>
-        public string Algorithm { get; set; } = "Backtracking";
+        public string Algorithm { get; set; } = "DFS Backtracking";
 
         /// <summary>
         /// Estado del proceso de resolución
@@ -104,5 +104,25 @@ namespace EightQueens.Web.Models
             }
             return string.Join(", ", coordinates);
         }
+
+        /// <summary>
+        /// Obtiene una descripción del algoritmo DFS usado
+        /// </summary>
+        public string GetAlgorithmDescription()
+        {
+            return "DFS (Depth First Search) con Backtracking - Enfoque preferido según literatura especializada";
+        }
+    }
+
+    /// <summary>
+    /// ViewModel para mostrar información detallada del algoritmo
+    /// </summary>
+    public class AlgorithmInfoViewModel
+    {
+        public string AlgorithmName { get; set; } = "DFS Backtracking";
+        public string Description { get; set; } = "";
+        public List<string> Advantages { get; set; } = new();
+        public List<string> Steps { get; set; } = new();
+        public Dictionary<string, string> TechnicalDetails { get; set; } = new();
     }
 }

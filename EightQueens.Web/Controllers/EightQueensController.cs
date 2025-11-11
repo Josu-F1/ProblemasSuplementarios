@@ -17,9 +17,10 @@ namespace EightQueens.Web.Controllers
 
         public EightQueensController()
         {
-            // Inyección de dependencias manual (se puede mejorar con DI Container)
+            // Inyección de dependencias manual con el nuevo algoritmo DFS
             IConflictChecker conflictChecker = new QueenConflictChecker();
-            ISolverStrategy strategy = new BacktrackingSolver(conflictChecker);
+            // Usar el algoritmo DFS con Backtracking (enfoque preferido)
+            ISolverStrategy strategy = new DFSBacktrackingSolver(conflictChecker);
             _solver = new QueensSolver(strategy);
         }
 
@@ -30,7 +31,8 @@ namespace EightQueens.Web.Controllers
         {
             var viewModel = new EightQueensViewModel
             {
-                StatusMessage = "¡Bienvenido al solucionador de las 8 Reinas! Haz clic en 'Resolver' para comenzar."
+                StatusMessage = "🧠 Bienvenido al solucionador DFS de las 8 Reinas! Usa el algoritmo preferido según literatura especializada.",
+                Algorithm = "DFS Backtracking (Depth First Search)"
             };
             return View(viewModel);
         }
@@ -70,8 +72,9 @@ namespace EightQueens.Web.Controllers
                     BoardSize = boardSize,
                     ExecutionTimeMs = stopwatch.Elapsed.TotalMilliseconds,
                     IsSolved = true,
+                    Algorithm = "DFS Backtracking (Depth First Search)",
                     StatusMessage = solutions.Count > 0 
-                        ? $"✅ ¡Éxito! Se encontraron {solutions.Count} soluciones en {stopwatch.Elapsed.TotalMilliseconds:F2} ms"
+                        ? $"✅ ¡Éxito! Algoritmo DFS encontró {solutions.Count} soluciones en {stopwatch.Elapsed.TotalMilliseconds:F2} ms"
                         : "❌ No se encontraron soluciones para este tamaño de tablero.",
                     CurrentSolutionIndex = 0
                 };
@@ -125,11 +128,92 @@ namespace EightQueens.Web.Controllers
         }
 
         /// <summary>
-        /// Página de información sobre el algoritmo
+        /// Página de información sobre el algoritmo DFS
         /// </summary>
         public IActionResult About()
         {
-            return View();
+            var algorithmInfo = new AlgorithmInfoViewModel
+            {
+                AlgorithmName = "DFS Backtracking (Depth First Search)",
+                Description = "Implementación del enfoque preferido según la literatura especializada para resolver el problema de las N reinas.",
+                Advantages = new List<string>
+                {
+                    "Modelo más natural del problema que las permutaciones",
+                    "Estructura de nodos explícita con IGNode<T>",
+                    "Backtracking automático manejado por el motor DFS",
+                    "Separación clara de responsabilidades",
+                    "Fácil extensión a otros problemas de satisfacción de restricciones",
+                    "Arquitectura genérica y reutilizable"
+                },
+                Steps = new List<string>
+                {
+                    "1. Crear nodo raíz (estado inicial sin reinas)",
+                    "2. firstChild(): Expandir a la siguiente fila",
+                    "3. Colocar reina en primera columna válida",
+                    "4. Verificar validez (no ataques diagonales)",
+                    "5. Si válido: continuar en profundidad",
+                    "6. nextSibling(): Probar siguiente columna",
+                    "7. Si no hay hermanos: Backtrack automático",
+                    "8. Repetir hasta encontrar todas las soluciones"
+                },
+                TechnicalDetails = new Dictionary<string, string>
+                {
+                    {"Patrón Principal", "Strategy + Template Method + DFS"},
+                    {"Interfaz Genérica", "IGNode<T> para nodos de búsqueda"},
+                    {"Motor de Búsqueda", "DFSEngine<T> genérico y reutilizable"},
+                    {"Complejidad Temporal", "O(N!) en el peor caso"},
+                    {"Complejidad Espacial", "O(N) para la profundidad de recursión"},
+                    {"Optimización", "Poda temprana con IsValid"},
+                    {"Literatura", "Enfoque preferido sobre permutaciones"},
+                    {"Tecnología", "ASP.NET Core MVC con C# .NET 8"}
+                }
+            };
+
+            return View(algorithmInfo);
+        }
+
+        /// <summary>
+        /// API para comparar rendimiento de algoritmos
+        /// </summary>
+        [HttpPost]
+        public IActionResult CompareAlgorithms(int boardSize = 8)
+        {
+            try
+            {
+                var results = new
+                {
+                    boardSize = boardSize,
+                    algorithms = new[]
+                    {
+                        MeasureAlgorithm("Backtracking Tradicional", 
+                            new BacktrackingSolver(new QueenConflictChecker()), boardSize),
+                        MeasureAlgorithm("DFS Backtracking (Preferido)", 
+                            new DFSBacktrackingSolver(new QueenConflictChecker()), boardSize)
+                    }
+                };
+
+                return Json(new { success = true, data = results });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        private object MeasureAlgorithm(string name, ISolverStrategy strategy, int boardSize)
+        {
+            var solver = new QueensSolver(strategy);
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            var solutions = solver.Solve(boardSize);
+            stopwatch.Stop();
+
+            return new
+            {
+                name = name,
+                solutionsFound = solutions.Count,
+                executionTimeMs = stopwatch.Elapsed.TotalMilliseconds,
+                algorithm = strategy.AlgorithmName
+            };
         }
     }
 }
