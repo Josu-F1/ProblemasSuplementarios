@@ -1,0 +1,72 @@
+﻿@model Problema3_CookieGame.Models.GameState
+
+<svg id="gameSvg" viewBox="0 0 @(Model.GridSize * 100) @(Model.GridSize * 100)"
+     style="width:100%;max-width:600px;display:block;margin:auto;">
+
+    @{
+        var edgeLines = new List<(int x1, int y1, int x2, int y2)>();
+        var validPoints = Model.CookiePoints.ToHashSet();
+
+        foreach (var point in Model.CookiePoints)
+        {
+            int x = point.x;
+            int y = point.y;
+
+            var neighbors = new List<(int dx, int dy)>
+        {
+        (-1, 0), (1, 0), (0, -1), (0, 1)
+        };
+
+            foreach (var (dx, dy) in neighbors)
+            {
+                int nx = x + dx;
+                int ny = y + dy;
+                var neighbor = (nx, ny);
+
+                if (!validPoints.Contains(neighbor) &&
+                nx >= 0 && ny >= 0 &&
+                nx < Model.GridSize && ny < Model.GridSize)
+                {
+                    edgeLines.Add((x, y, nx, ny));
+                }
+            }
+        }
+    }
+
+    @foreach (var square in Model.Squares)
+    {
+        var color = square.Owner == Model.Player1.Name ? Model.Player1.Color : Model.Player2.Color;
+        <rect x="@(square.X * 100 + 5)" y="@(square.Y * 100 + 5)" width="90" height="90"
+              fill="@color" fill-opacity="0.4" />
+    }
+
+
+    <!-- Líneas de borde para escalones -->
+    @foreach (var line in edgeLines)
+    {
+        <line x1="@(line.x1 * 100)" y1="@(line.y1 * 100)"
+              x2="@(line.x2 * 100)" y2="@(line.y2 * 100)"
+              stroke="black" stroke-width="2" stroke-dasharray="4,2" />
+    }
+
+    
+
+    <!-- Líneas dibujadas -->
+    @foreach (var line in Model.Lines)
+    {
+        var color = line.Owner == Model.Player1.Name ? Model.Player1.Color : Model.Player2.Color;
+        <line x1="@(line.X1 * 100)" y1="@(line.Y1 * 100)"
+              x2="@(line.X2 * 100)" y2="@(line.Y2 * 100)"
+              stroke="@color" stroke-width="5" stroke-linecap="round" />
+    }
+
+    <!-- Puntos válidos de la galleta -->
+    @foreach (var point in Model.CookiePoints)
+    {
+        <circle cx="@(point.x * 100)" cy="@(point.y * 100)" r="8"
+                fill="brown" stroke="black" stroke-width="1"
+                class="cookie-point"
+                data-x="@point.x" data-y="@point.y" />
+    }
+
+</svg>

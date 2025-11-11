@@ -1,0 +1,23 @@
+# Ignorar archivos temporales de Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Carpetas de compilación
+bin/
+obj/
+Debug/
+Release/
+
+# Archivos temporales
+*.log
+*.tmp
+
+# Archivos generados por herramientas
+*.cache
+*.pdb
+
+# Configuraciones locales
+appsettings.Development.json

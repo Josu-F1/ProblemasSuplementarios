@@ -1,0 +1,65 @@
+﻿@model Problema3_CookieGame.Models.GameState
+@{
+    var puntosJugador1 = Model.Squares.Count(s => s.Owner == Model.Player1.Name);
+    var puntosJugador2 = Model.Squares.Count(s => s.Owner == Model.Player2.Name);
+}
+
+<h2>Juego de la Galleta</h2>
+<p>Turno actual: <strong>@Model.CurrentPlayer</strong></p>
+<p>Puntaje:</p>
+<ul>
+    <li>@Model.Player1.Name (@Model.Player1): @puntosJugador1</li>
+    <li>@Model.Player2.Name (@Model.Player2): @puntosJugador2</li>
+</ul>
+
+<div id="gameBoardContainer">
+    @Html.Partial("_GameBoard", Model)
+</div>
+
+<form method="post" asp-action="Reset">
+    <button type="submit">Reiniciar Juego</button>
+</form>
+
+@section Scripts {
+    <script>
+        let firstPoint = null;
+
+        function attachClickEvents() {
+            document.querySelectorAll(".cookie-point").forEach(circle => {
+                circle.addEventListener("click", () => {
+                    const x = parseInt(circle.dataset.x);
+                    const y = parseInt(circle.dataset.y);
+
+                    if (!firstPoint) {
+                        firstPoint = { x, y };
+                        circle.setAttribute("fill", "orange");
+                    } else {
+                        const secondPoint = { x, y };
+                        sendLine(firstPoint, secondPoint);
+                        firstPoint = null;
+                        resetPointColors();
+                    }
+                });
+            });
+        }
+
+        function resetPointColors() {
+            document.querySelectorAll(".cookie-point").forEach(c => c.setAttribute("fill", "brown"));
+        }
+
+        function sendLine(p1, p2) {
+            fetch("/Game/AddLine", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `x1=${p1.x}&y1=${p1.y}&x2=${p2.x}&y2=${p2.y}`
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById("gameBoardContainer").innerHTML = html;
+                attachClickEvents(); // ← Reasignar eventos después de actualizar el tablero
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", attachClickEvents);
+    </script>
+}
