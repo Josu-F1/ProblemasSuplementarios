@@ -124,9 +124,9 @@ async function checkBoard() {
     // Todo consistente con reglas
     if (data.solved) {
       qa('.cell-input').forEach(el => el.classList.add('valid'));
-      q('#status').textContent = '¡Correcto! Tablero completo y válido ';
+      q('#status').textContent = '¡Correcto!  ';
     } else {
-      q('#status').textContent = 'Hasta ahora todo va bien  (aún no está completo).';
+      q('#status').textContent = 'Hasta ahora todo va bien ';
     }
   }
 }
@@ -144,10 +144,6 @@ document.addEventListener('click', (e) => {
 let liveTimer = null;
 document.addEventListener('input', (e) => {
   if (!e.target.classList.contains('cell-input')) return;
-
-  // (ya tenías la validación 1..9)
-  const val = e.target.value.trim();
-  if (val !== '' && !/^[1-9]$/.test(val)) { e.target.value = ''; return; }
 
   // si está activado el live check, valida con debounce
   if (q('#liveCheck')?.checked) {
