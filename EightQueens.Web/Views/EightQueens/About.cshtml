@@ -1,0 +1,304 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Acerca del Algoritmo";
+}
+
+@model EightQueens.Web.Models.AlgorithmInfoViewModel
+
+<div class="page-header">
+    <h1><i class="fas fa-brain text-info me-3"></i>@Model.AlgorithmName</h1>
+    <p class="lead">@Model.Description</p>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>¿Qué es DFS Backtracking?</h5>
+            </div>
+            <div class="card-body">
+                <p>El <strong>DFS Backtracking</strong> es el <em>enfoque preferido</em> según la literatura especializada para resolver el problema de las N reinas, más natural que el enfoque de permutaciones.</p>
+                
+                <h6 class="text-primary mt-3">Ventajas del enfoque DFS:</h6>
+                <ul class="list-unstyled">
+                    @foreach (var advantage in Model.Advantages.Take(4))
+                    {
+                        <li><i class="fas fa-check text-success me-2"></i>@advantage</li>
+                    }
+                </ul>
+                
+                <div class="mt-3 p-3 bg-light border-start border-4 border-info">
+                    <small class="text-muted">
+                        <i class="fas fa-book text-info me-1"></i>
+                        <strong>Literatura:</strong> "El enfoque DFS es más natural que el de permutaciones para modelar este problema"
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-chess-queen me-2"></i>Proceso DFS Step-by-Step</h5>
+            </div>
+            <div class="card-body">
+                <p>El algoritmo DFS modela el problema usando nodos con métodos específicos:</p>
+                
+                <ol>
+                    @foreach (var step in Model.Steps)
+                    {
+                        <li>@step</li>
+                    }
+                </ol>
+                
+                <div class="mt-3 p-3 bg-light border-start border-4 border-warning">
+                    <small class="text-muted">
+                        <i class="fas fa-lightbulb text-warning me-1"></i>
+                        <strong>Dato curioso:</strong> El motor DFS reduce de 40,320 permutaciones a ~2,056 nodos explorados con poda inteligente.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Complejidad</h5>
+            </div>
+            <div class="card-body text-center">
+                <h4 class="text-info">O(N!)</h4>
+                <p class="mb-0">Tiempo en el peor caso</p>
+                <hr>
+                <h4 class="text-success">O(N)</h4>
+                <p class="mb-0">Espacio utilizado</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-trophy me-2"></i>Resultados</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>N</th>
+                            <th>Soluciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>4</td><td>2</td></tr>
+                        <tr><td>5</td><td>10</td></tr>
+                        <tr><td>6</td><td>4</td></tr>
+                        <tr><td>7</td><td>40</td></tr>
+                        <tr class="table-primary"><td><strong>8</strong></td><td><strong>92</strong></td></tr>
+                        <tr><td>9</td><td>352</td></tr>
+                        <tr><td>10</td><td>724</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="fas fa-code me-2"></i>Arquitectura DFS</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="text-primary">Componentes Principales:</h6>
+                <ul class="list-unstyled">
+                    @foreach (var detail in Model.TechnicalDetails.Take(4))
+                    {
+                        <li><i class="fas fa-cog text-primary me-2"></i><strong>@detail.Key:</strong> @detail.Value</li>
+                    }
+                </ul>
+                
+                <h6 class="text-primary mt-3">Stack Tecnológico:</h6>
+                <ul class="list-unstyled">
+                    @foreach (var detail in Model.TechnicalDetails.Skip(6))
+                    {
+                        <li><i class="fab fa-microsoft text-info me-2"></i><strong>@detail.Key:</strong> @detail.Value</li>
+                    }
+                </ul>
+
+                <div class="mt-3">
+                    <button class="btn btn-outline-info" onclick="showComparison()">
+                        <i class="fas fa-chart-bar me-2"></i>Comparar con Backtracking Tradicional
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="fas fa-graduation-cap me-2"></i>Historia y Contexto Académico</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Origen del Problema</h6>
+                        <p>El problema de las 8 reinas fue propuesto por el ajedrecista alemán <strong>Max Bezzel</strong> en 1848. Se popularizó cuando el matemático <strong>Carl Friedrich Gauss</strong> trabajó en su solución.</p>
+                        
+                        <h6 class="text-primary mt-3">Relevancia en IA</h6>
+                        <p>Este problema es fundamental en el estudio de algoritmos de búsqueda y se usa como ejemplo clásico para enseñar técnicas de <em>constraint satisfaction</em> y backtracking.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Universidad Técnica de Ambato</h6>
+                        <p>Este proyecto forma parte del curso de <strong>Inteligencia Artificial</strong> de la Facultad de Ingeniería en Sistemas, Electrónica e Industrial.</p>
+                        
+                        <div class="mt-3 p-3 bg-primary bg-opacity-10 border-start border-4 border-primary">
+                            <p class="mb-1"><strong>Objetivo Académico:</strong></p>
+                            <p class="mb-0 small">Aplicar principios de POO, patrones de diseño y algoritmos de IA para resolver problemas complejos usando C# y ASP.NET Core.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sección de comparación -->
+<div id="comparison-section" class="row mt-4" style="display: none;">
+    <div class="col-md-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Comparación de Rendimiento</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="comparison-size" class="form-label">Tamaño del tablero:</label>
+                        <select id="comparison-size" class="form-select">
+                            <option value="4">4x4</option>
+                            <option value="5">5x5</option>
+                            <option value="6">6x6</option>
+                            <option value="7">7x7</option>
+                            <option value="8" selected>8x8</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 d-flex align-items-end">
+                        <button class="btn btn-warning w-100" onclick="runComparison()">
+                            <i class="fas fa-play me-2"></i>Ejecutar Comparación
+                        </button>
+                    </div>
+                </div>
+                <div id="comparison-results" class="mt-3" style="display: none;">
+                    <!-- Los resultados se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <a href="/" class="btn btn-uta-primary btn-lg">
+        <i class="fas fa-play me-2"></i>Probar el Algoritmo DFS
+    </a>
+</div>
+
+@section Scripts {
+<script>
+    function showComparison() {
+        const section = document.getElementById('comparison-section');
+        if (section.style.display === 'none') {
+            section.style.display = 'block';
+            section.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            section.style.display = 'none';
+        }
+    }
+
+    async function runComparison() {
+        const size = document.getElementById('comparison-size').value;
+        const resultsDiv = document.getElementById('comparison-results');
+        
+        // Mostrar loading
+        resultsDiv.style.display = 'block';
+        resultsDiv.innerHTML = `
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Comparando algoritmos...</span>
+                </div>
+                <p class="mt-2">Ejecutando comparación para tablero ${size}x${size}...</p>
+            </div>
+        `;
+
+        try {
+            const response = await fetch('/EightQueens/CompareAlgorithms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ boardSize: parseInt(size) })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                displayComparisonResults(result.data);
+            } else {
+                resultsDiv.innerHTML = `<div class="alert alert-danger">Error: ${result.message}</div>`;
+            }
+        } catch (error) {
+            resultsDiv.innerHTML = `<div class="alert alert-danger">Error de conexión: ${error.message}</div>`;
+        }
+    }
+
+    function displayComparisonResults(data) {
+        const resultsDiv = document.getElementById('comparison-results');
+        
+        let html = `
+            <div class="alert alert-success">
+                <h6><i class="fas fa-chart-line me-2"></i>Resultados para tablero ${data.boardSize}x${data.boardSize}:</h6>
+            </div>
+            <div class="row">
+        `;
+
+        data.algorithms.forEach((alg, index) => {
+            const badgeClass = index === 0 ? 'bg-info' : 'bg-success';
+            const icon = index === 0 ? 'fa-cogs' : 'fa-brain';
+            
+            html += `
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h6 class="card-title">
+                                <span class="badge ${badgeClass}">
+                                    <i class="fas ${icon} me-1"></i>${alg.name}
+                                </span>
+                            </h6>
+                            <p class="card-text">
+                                <strong>${alg.solutionsFound}</strong> soluciones<br>
+                                <small class="text-muted">${alg.executionTimeMs.toFixed(2)} ms</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `
+            </div>
+            <div class="mt-3 p-3 bg-light rounded">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle text-info me-1"></i>
+                    Ambos algoritmos encuentran el mismo número de soluciones. El enfoque DFS es preferido por su arquitectura más natural y mantenible.
+                </small>
+            </div>
+        `;
+
+        resultsDiv.innerHTML = html;
+    }
+</script>
+}

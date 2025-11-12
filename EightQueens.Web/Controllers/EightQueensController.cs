@@ -1,0 +1,219 @@
+using EightQueens.Services;
+using EightQueens.Strategies;
+using EightQueens.Web.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+
+namespace EightQueens.Web.Controllers
+{
+    /// <summary>
+    /// Controlador principal para el problema de las 8 reinas
+    /// Patrón: MVC (Model-View-Controller)
+    /// Responsabilidad: Manejar las peticiones web y coordinar la lógica de negocio
+    /// </summary>
+    public class EightQueensController : Controller
+    {
+        private readonly QueensSolver _solver;
+
+        public EightQueensController()
+        {
+            // Inyección de dependencias manual con el nuevo algoritmo DFS
+            IConflictChecker conflictChecker = new QueenConflictChecker();
+            // Usar el algoritmo DFS con Backtracking (enfoque preferido)
+            ISolverStrategy strategy = new DFSBacktrackingSolver(conflictChecker);
+            _solver = new QueensSolver(strategy);
+        }
+
+        /// <summary>
+        /// GET: Página principal
+        /// </summary>
+        public IActionResult Index()
+        {
+            var viewModel = new EightQueensViewModel
+            {
+                StatusMessage = "🧠 Bienvenido al solucionador DFS de las 8 Reinas! Usa el algoritmo preferido según literatura especializada.",
+                Algorithm = "DFS Backtracking (Depth First Search)"
+            };
+            return View(viewModel);
+        }
+
+        /// <summary>
+        /// POST: Resolver el problema de las N reinas
+        /// </summary>
+        [HttpPost]
+        public IActionResult Solve(int boardSize = 8)
+        {
+            try
+            {
+                // Validar entrada
+                if (boardSize < 4 || boardSize > 12)
+                {
+                    var errorModel = new EightQueensViewModel
+                    {
+                        BoardSize = boardSize,
+                        StatusMessage = "❌ El tamaño del tablero debe estar entre 4 y 12.",
+                        IsSolved = false
+                    };
+                    return View("Index", errorModel);
+                }
+
+                // Medir tiempo de ejecución
+                var stopwatch = Stopwatch.StartNew();
+                var solutions = _solver.Solve(boardSize);
+                stopwatch.Stop();
+
+                // Convertir a ViewModels
+                var boardViewModels = solutions.Select((board, index) => 
+                    new BoardViewModel(board, index + 1)).ToList();
+
+                var viewModel = new EightQueensViewModel
+                {
+                    Solutions = boardViewModels,
+                    BoardSize = boardSize,
+                    ExecutionTimeMs = stopwatch.Elapsed.TotalMilliseconds,
+                    IsSolved = true,
+                    Algorithm = "DFS Backtracking (Depth First Search)",
+                    StatusMessage = solutions.Count > 0 
+                        ? $"✅ ¡Éxito! Algoritmo DFS encontró {solutions.Count} soluciones en {stopwatch.Elapsed.TotalMilliseconds:F2} ms"
+                        : "❌ No se encontraron soluciones para este tamaño de tablero.",
+                    CurrentSolutionIndex = 0
+                };
+
+                return View("Index", viewModel);
+            }
+            catch (Exception ex)
+            {
+                var errorModel = new EightQueensViewModel
+                {
+                    BoardSize = boardSize,
+                    StatusMessage = $"❌ Error al resolver el problema: {ex.Message}",
+                    IsSolved = false
+                };
+                return View("Index", errorModel);
+            }
+        }
+
+        /// <summary>
+        /// API endpoint para obtener una solución específica
+        /// </summary>
+        [HttpGet]
+        public IActionResult GetSolution(int boardSize, int solutionIndex)
+        {
+            try
+            {
+                var solutions = _solver.Solve(boardSize);
+                
+                if (solutionIndex >= 0 && solutionIndex < solutions.Count)
+                {
+                    var boardViewModel = new BoardViewModel(solutions[solutionIndex], solutionIndex + 1);
+                    return Json(new { 
+                        success = true, 
+                        board = boardViewModel,
+                        totalSolutions = solutions.Count 
+                    });
+                }
+
+                return Json(new { 
+                    success = false, 
+                    message = "Índice de solución no válido" 
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { 
+                    success = false, 
+                    message = ex.Message 
+                });
+            }
+        }
+
+        /// <summary>
+        /// Página de información sobre el algoritmo DFS
+        /// </summary>
+        public IActionResult About()
+        {
+            var algorithmInfo = new AlgorithmInfoViewModel
+            {
+                AlgorithmName = "DFS Backtracking (Depth First Search)",
+                Description = "Implementación del enfoque preferido según la literatura especializada para resolver el problema de las N reinas.",
+                Advantages = new List<string>
+                {
+                    "Modelo más natural del problema que las permutaciones",
+                    "Estructura de nodos explícita con IGNode<T>",
+                    "Backtracking automático manejado por el motor DFS",
+                    "Separación clara de responsabilidades",
+                    "Fácil extensión a otros problemas de satisfacción de restricciones",
+                    "Arquitectura genérica y reutilizable"
+                },
+                Steps = new List<string>
+                {
+                    "1. Crear nodo raíz (estado inicial sin reinas)",
+                    "2. firstChild(): Expandir a la siguiente fila",
+                    "3. Colocar reina en primera columna válida",
+                    "4. Verificar validez (no ataques diagonales)",
+                    "5. Si válido: continuar en profundidad",
+                    "6. nextSibling(): Probar siguiente columna",
+                    "7. Si no hay hermanos: Backtrack automático",
+                    "8. Repetir hasta encontrar todas las soluciones"
+                },
+                TechnicalDetails = new Dictionary<string, string>
+                {
+                    {"Patrón Principal", "Strategy + Template Method + DFS"},
+                    {"Interfaz Genérica", "IGNode<T> para nodos de búsqueda"},
+                    {"Motor de Búsqueda", "DFSEngine<T> genérico y reutilizable"},
+                    {"Complejidad Temporal", "O(N!) en el peor caso"},
+                    {"Complejidad Espacial", "O(N) para la profundidad de recursión"},
+                    {"Optimización", "Poda temprana con IsValid"},
+                    {"Literatura", "Enfoque preferido sobre permutaciones"},
+                    {"Tecnología", "ASP.NET Core MVC con C# .NET 8"}
+                }
+            };
+
+            return View(algorithmInfo);
+        }
+
+        /// <summary>
+        /// API para comparar rendimiento de algoritmos
+        /// </summary>
+        [HttpPost]
+        public IActionResult CompareAlgorithms(int boardSize = 8)
+        {
+            try
+            {
+                var results = new
+                {
+                    boardSize = boardSize,
+                    algorithms = new[]
+                    {
+                        MeasureAlgorithm("Backtracking Tradicional", 
+                            new BacktrackingSolver(new QueenConflictChecker()), boardSize),
+                        MeasureAlgorithm("DFS Backtracking (Preferido)", 
+                            new DFSBacktrackingSolver(new QueenConflictChecker()), boardSize)
+                    }
+                };
+
+                return Json(new { success = true, data = results });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        private object MeasureAlgorithm(string name, ISolverStrategy strategy, int boardSize)
+        {
+            var solver = new QueensSolver(strategy);
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            var solutions = solver.Solve(boardSize);
+            stopwatch.Stop();
+
+            return new
+            {
+                name = name,
+                solutionsFound = solutions.Count,
+                executionTimeMs = stopwatch.Elapsed.TotalMilliseconds,
+                algorithm = strategy.AlgorithmName
+            };
+        }
+    }
+}
