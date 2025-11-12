@@ -52,15 +52,59 @@ public class GameState
         get
         {
             var valid = CookiePoints.ToHashSet();
+            var countedSquares = new HashSet<(int x, int y)>();
             int count = 0;
 
+            // Contar cuadrados completamente dentro del área válida
             foreach (var (x, y) in CookiePoints)
             {
                 if (valid.Contains((x + 1, y)) &&
                     valid.Contains((x, y + 1)) &&
                     valid.Contains((x + 1, y + 1)))
                 {
-                    count++;
+                    if (!countedSquares.Contains((x, y)))
+                    {
+                        countedSquares.Add((x, y));
+                        count++;
+                    }
+                }
+            }
+
+            // Contar cuadrados en el borde (que tienen al menos 2 vértices dentro del área válida)
+            foreach (var (x, y) in CookiePoints)
+            {
+                // Verificar cuadrados adyacentes que pueden estar en el borde
+                var candidates = new List<(int x, int y)>
+                {
+                    (x - 1, y),     // cuadrado a la izquierda
+                    (x, y - 1),     // cuadrado arriba
+                    (x - 1, y - 1)  // cuadrado diagonal arriba-izquierda
+                };
+
+                foreach (var (sqX, sqY) in candidates)
+                {
+                    if (countedSquares.Contains((sqX, sqY)))
+                        continue;
+
+                    // Verificar si este cuadrado tiene al menos 2 vértices dentro del área válida
+                    int verticesInside = 0;
+                    if (valid.Contains((sqX, sqY))) verticesInside++;
+                    if (valid.Contains((sqX + 1, sqY))) verticesInside++;
+                    if (valid.Contains((sqX, sqY + 1))) verticesInside++;
+                    if (valid.Contains((sqX + 1, sqY + 1))) verticesInside++;
+
+                    // Si tiene al menos 2 vértices dentro y todos están dentro del grid, es un cuadrado válido del borde
+                    if (verticesInside >= 2)
+                    {
+                        bool allInGrid = sqX >= 0 && sqX < GridSize - 1 && 
+                                        sqY >= 0 && sqY < GridSize - 1;
+                        
+                        if (allInGrid)
+                        {
+                            countedSquares.Add((sqX, sqY));
+                            count++;
+                        }
+                    }
                 }
             }
 

@@ -100,11 +100,8 @@ public class GameService
         int squaresClosed = 0;
         foreach (var (x, y) in candidates)
         {
-            // Validar que el cuadrado esté dentro del área válida de la galleta
-            bool isValidSquare = validPoints.Contains((x, y)) &&
-                                 validPoints.Contains((x + 1, y)) &&
-                                 validPoints.Contains((x, y + 1)) &&
-                                 validPoints.Contains((x + 1, y + 1));
+            // Validar si el cuadrado es válido (puede estar en el borde de la galleta)
+            bool isValidSquare = IsValidSquare(x, y);
             
             if (isValidSquare && IsSquareClosed(x, y) &&
                 !_game.Squares.Any(s => s.X == x && s.Y == y))
@@ -147,19 +144,106 @@ public class GameService
         }
     }
 
+    private bool IsValidSquare(int x, int y)
+    {
+        var validPoints = _game.CookiePoints.ToHashSet();
+        
+        // Un cuadrado es válido si:
+        // 1. Todos sus vértices están dentro del área válida, O
+        // 2. Al menos 2 vértices están dentro y el cuadrado está delimitado por el borde de la galleta
+        
+        bool v1 = validPoints.Contains((x, y));
+        bool v2 = validPoints.Contains((x + 1, y));
+        bool v3 = validPoints.Contains((x, y + 1));
+        bool v4 = validPoints.Contains((x + 1, y + 1));
+        
+        int verticesInside = (v1 ? 1 : 0) + (v2 ? 1 : 0) + (v3 ? 1 : 0) + (v4 ? 1 : 0);
+        
+        // Si todos los vértices están dentro, es válido
+        if (verticesInside == 4)
+            return true;
+        
+        // Si al menos 2 vértices están dentro, verificar si está delimitado por el borde
+        if (verticesInside >= 2)
+        {
+            // Verificar si los vértices fuera están en el borde del grid (dentro de GridSize)
+            bool v1Valid = v1 || (x >= 0 && x < _game.GridSize && y >= 0 && y < _game.GridSize);
+            bool v2Valid = v2 || (x + 1 >= 0 && x + 1 < _game.GridSize && y >= 0 && y < _game.GridSize);
+            bool v3Valid = v3 || (x >= 0 && x < _game.GridSize && y + 1 >= 0 && y + 1 < _game.GridSize);
+            bool v4Valid = v4 || (x + 1 >= 0 && x + 1 < _game.GridSize && y + 1 >= 0 && y + 1 < _game.GridSize);
+            
+            // Si todos los vértices están dentro del grid, el cuadrado puede estar en el borde
+            if (v1Valid && v2Valid && v3Valid && v4Valid)
+            {
+                // Verificar que al menos una línea del cuadrado esté dentro del área válida
+                // o que el cuadrado esté adyacente al área válida
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    private HashSet<(int x1, int y1, int x2, int y2)> GetEdgeLines()
+    {
+        var edgeLines = new HashSet<(int x1, int y1, int x2, int y2)>();
+        var validPoints = _game.CookiePoints.ToHashSet();
+
+        foreach (var point in _game.CookiePoints)
+        {
+            int x = point.x;
+            int y = point.y;
+
+            var neighbors = new List<(int dx, int dy)>
+            {
+                (-1, 0), (1, 0), (0, -1), (0, 1)
+            };
+
+            foreach (var (dx, dy) in neighbors)
+            {
+                int nx = x + dx;
+                int ny = y + dy;
+                var neighbor = (nx, ny);
+
+                // Si el vecino está fuera del área válida pero dentro del grid, es una línea del borde
+                if (!validPoints.Contains(neighbor) &&
+                    nx >= 0 && ny >= 0 &&
+                    nx < _game.GridSize && ny < _game.GridSize)
+                {
+                    // Agregar en ambas direcciones para facilitar la búsqueda
+                    edgeLines.Add((x, y, nx, ny));
+                    edgeLines.Add((nx, ny, x, y));
+                }
+            }
+        }
+
+        return edgeLines;
+    }
+    
     private bool IsSquareClosed(int x, int y)
     {
         var lines = _game.Lines;
+        var edgeLines = GetEdgeLines();
 
         // Función helper para verificar si existe una línea entre dos puntos (en cualquier dirección)
         bool HasLine(int x1, int y1, int x2, int y2)
         {
-            return lines.Any(l =>
+            // Verificar si hay una línea dibujada por los jugadores
+            bool hasDrawnLine = lines.Any(l =>
                 (l.X1 == x1 && l.Y1 == y1 && l.X2 == x2 && l.Y2 == y2) ||
                 (l.X1 == x2 && l.Y1 == y2 && l.X2 == x1 && l.Y2 == y1));
+            
+            if (hasDrawnLine)
+                return true;
+            
+            // Verificar si es una línea del borde de la galleta
+            bool isEdgeLine = edgeLines.Contains((x1, y1, x2, y2)) || 
+                             edgeLines.Contains((x2, y2, x1, y1));
+            
+            return isEdgeLine;
         }
 
-        // Un cuadrado está cerrado si tiene las 4 líneas:
+        // Un cuadrado está cerrado si tiene las 4 líneas (dibujadas o del borde):
         // 1. Línea superior horizontal: (x, y) -> (x+1, y)
         // 2. Línea inferior horizontal: (x, y+1) -> (x+1, y+1)
         // 3. Línea izquierda vertical: (x, y) -> (x, y+1)
