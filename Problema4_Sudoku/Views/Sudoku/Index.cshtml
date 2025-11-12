@@ -1,0 +1,28 @@
+﻿
+@model Problema4_Sudoku.Models.SudokuBoard
+@{
+    ViewData["Title"] = "Sudoku – IA ";
+}
+
+<link rel="stylesheet" href="~/css/site.css" />
+<div class="container">
+  <h1>Sudoku – IA </h1>
+
+  <div class="toolbar">
+    <button id="btnDemo" class="btn">Cargar demo</button>
+    <button id="btnClear" class="btn">Limpiar</button>
+        <button id="btnCheck" class="btn">Comprobar</button>
+        <label style="display:inline-flex;align-items:center;gap:6px;margin-left:6px;">
+            <input type="checkbox" id="liveCheck" /> Validación en vivo
+        </label>
+    <button id="btnSolve" class="btn primary">Resolver (Instantáneo)</button>
+    <button id="btnStep" class="btn">Resolver Paso a Paso</button>
+    <span id="status" class="status">Listo.</span>
+  </div>
+
+  <div id="boardContainer">
+    @await Html.PartialAsync("_Board", Model)
+  </div>
+</div>
+
+<script src="~/js/sudoku.js"></script>

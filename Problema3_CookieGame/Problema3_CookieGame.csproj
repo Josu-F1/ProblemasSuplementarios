@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
+ <ItemGroup>
     <Folder Include="Strategies\" />
   </ItemGroup>
 

@@ -13,15 +13,9 @@ namespace EightQueens.Web.Controllers
     /// </summary>
     public class EightQueensController : Controller
     {
-        private readonly QueensSolver _solver;
-
+        // Ya no necesita QueensSolver - usa estrategias directamente para evitar interacción de consola
         public EightQueensController()
         {
-            // Inyección de dependencias manual con el nuevo algoritmo DFS
-            IConflictChecker conflictChecker = new QueenConflictChecker();
-            // Usar el algoritmo DFS con Backtracking (enfoque preferido)
-            ISolverStrategy strategy = new DFSBacktrackingSolver(conflictChecker);
-            _solver = new QueensSolver(strategy);
         }
 
         /// <summary>
@@ -57,9 +51,12 @@ namespace EightQueens.Web.Controllers
                     return View("Index", errorModel);
                 }
 
-                // Medir tiempo de ejecución
+                // Medir tiempo de ejecución - Usar estrategia directamente sin interacción
+                var conflictChecker = new ConflictChecker();
+                var strategy = new DFSBacktrackingSolver(conflictChecker);
+                
                 var stopwatch = Stopwatch.StartNew();
-                var solutions = _solver.Solve(boardSize);
+                var solutions = strategy.Solve(boardSize);
                 stopwatch.Stop();
 
                 // Convertir a ViewModels
@@ -101,7 +98,10 @@ namespace EightQueens.Web.Controllers
         {
             try
             {
-                var solutions = _solver.Solve(boardSize);
+                // Usar estrategia directamente para evitar interacción de consola
+                var conflictChecker = new ConflictChecker();
+                var strategy = new DFSBacktrackingSolver(conflictChecker);
+                var solutions = strategy.Solve(boardSize);
                 
                 if (solutionIndex >= 0 && solutionIndex < solutions.Count)
                 {
@@ -173,6 +173,54 @@ namespace EightQueens.Web.Controllers
         }
 
         /// <summary>
+        /// API AJAX para resolver el problema de las N reinas
+        /// </summary>
+        [HttpPost]
+        public IActionResult SolveAjax(int boardSize = 8)
+        {
+            try
+            {
+                // Validar entrada
+                if (boardSize < 4 || boardSize > 10)
+                {
+                    return Json(new { success = false, message = "El tamaño del tablero debe estar entre 4 y 10." });
+                }
+
+                // Usar Backtracking clásico para mayor velocidad - SIN INTERACCIÓN DE CONSOLA
+                var conflictChecker = new ConflictChecker();
+                var strategy = new BacktrackingSolver(conflictChecker);
+
+                var stopwatch = Stopwatch.StartNew();
+                // Usar directamente la estrategia para evitar interacción de consola
+                var solutions = strategy.Solve(boardSize);
+                stopwatch.Stop();
+
+                // Limitar a las primeras 10 soluciones para evitar timeouts
+                var limitedSolutions = solutions.Take(10).ToList();
+
+                var result = new
+                {
+                    success = true,
+                    boardSize = boardSize,
+                    solutionsCount = solutions.Count,
+                    executionTimeMs = stopwatch.Elapsed.TotalMilliseconds,
+                    algorithm = strategy.GetAlgorithmName(),
+                    solutions = limitedSolutions.Select((board, index) => new
+                    {
+                        solutionNumber = index + 1,
+                        queens = board.GetQueenPositions().Select(pos => new { row = pos.row, col = pos.col }).ToArray()
+                    }).ToArray()
+                };
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        /// <summary>
         /// API para comparar rendimiento de algoritmos
         /// </summary>
         [HttpPost]
@@ -186,9 +234,9 @@ namespace EightQueens.Web.Controllers
                     algorithms = new[]
                     {
                         MeasureAlgorithm("Backtracking Tradicional", 
-                            new BacktrackingSolver(new QueenConflictChecker()), boardSize),
+                            new BacktrackingSolver(new ConflictChecker()), boardSize),
                         MeasureAlgorithm("DFS Backtracking (Preferido)", 
-                            new DFSBacktrackingSolver(new QueenConflictChecker()), boardSize)
+                            new DFSBacktrackingSolver(new ConflictChecker()), boardSize)
                     }
                 };
 
@@ -202,7 +250,8 @@ namespace EightQueens.Web.Controllers
 
         private object MeasureAlgorithm(string name, ISolverStrategy strategy, int boardSize)
         {
-            var solver = new QueensSolver(strategy);
+            var renderer = new Services.NullBoardRenderer();
+            var solver = new QueensSolver(strategy, renderer);
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             var solutions = solver.Solve(boardSize);
             stopwatch.Stop();
@@ -212,7 +261,7 @@ namespace EightQueens.Web.Controllers
                 name = name,
                 solutionsFound = solutions.Count,
                 executionTimeMs = stopwatch.Elapsed.TotalMilliseconds,
-                algorithm = strategy.AlgorithmName
+                algorithm = strategy.GetAlgorithmName()
             };
         }
     }

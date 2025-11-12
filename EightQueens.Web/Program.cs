@@ -1,15 +1,10 @@
-using EightQueens.Services;
-using EightQueens.Strategies;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Agregar servicios al contenedor
 builder.Services.AddControllersWithViews();
 
-// Registrar dependencias del dominio de EightQueens
-builder.Services.AddScoped<IConflictChecker, QueenConflictChecker>();
-builder.Services.AddScoped<ISolverStrategy, BacktrackingSolver>();
-builder.Services.AddScoped<QueensSolver>();
+// Ya no se necesitan dependencias inyectadas - el controlador crea las estrategias directamente
+// para evitar interacción de consola del QueensSolver
 
 var app = builder.Build();
 
