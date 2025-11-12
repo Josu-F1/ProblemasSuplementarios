@@ -18,6 +18,8 @@ public class GameState
 
     public string CurrentPlayer { get; set; } = "Jugador1";
     public bool GameOver { get; set; } = false;
+    public bool IsAIMode { get; set; } = false;
+    public string AIPlayerName { get; set; } = "IA";
 
     public List<(int x, int y)> CookiePoints => GenerateCookiePoints();
 

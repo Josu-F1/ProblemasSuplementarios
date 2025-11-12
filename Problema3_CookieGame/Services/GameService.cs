@@ -28,11 +28,72 @@ public class GameService
 
     public void ResetGame()
     {
+        bool wasAIMode = _game.IsAIMode;
+        string aiPlayerName = _game.AIPlayerName;
+        
         _game = new GameState();
         _game.Player1.Score = 0;
         _game.Player2.Score = 0;
         _game.GameOver = false;
         _game.CurrentPlayer = _game.Player1.Name;
+        _game.IsAIMode = wasAIMode;
+        _game.AIPlayerName = aiPlayerName;
+    }
+    
+    public void SetAIMode(bool enabled, string aiPlayerName = "IA")
+    {
+        _game.IsAIMode = enabled;
+        _game.AIPlayerName = aiPlayerName;
+        
+        // Si se activa el modo IA, asignar la IA al jugador 2
+        if (enabled)
+        {
+            _game.Player2.Name = aiPlayerName;
+            _game.Player2.Color = "#00ff00"; // Verde para la IA
+        }
+        else
+        {
+            _game.Player2.Name = "Jugador2";
+            _game.Player2.Color = "#0000ff"; // Azul para jugador 2
+        }
+    }
+    
+    public bool IsAITurn()
+    {
+        if (!_game.IsAIMode || _game.GameOver)
+            return false;
+        
+        // Verificar si el jugador actual es la IA (puede ser Player2.Name o AIPlayerName)
+        return _game.CurrentPlayer == _game.AIPlayerName || 
+               _game.CurrentPlayer == _game.Player2.Name;
+    }
+    
+    public (int x1, int y1, int x2, int y2)? GetAIMove()
+    {
+        if (!_game.IsAIMode || _game.GameOver)
+        {
+            return null;
+        }
+        
+        // Verificar que realmente es turno de la IA
+        if (!IsAITurn())
+        {
+            return null;
+        }
+        
+        string humanPlayerName = _game.Player1.Name;
+        var aiPlayer = new AIPlayer(_game.AIPlayerName, humanPlayerName, maxDepth: 3); // Reducir profundidad para más velocidad
+        
+        var move = aiPlayer.GetBestMove(_game);
+        
+        // Si no hay movimiento, intentar con profundidad menor
+        if (!move.HasValue)
+        {
+            var aiPlayerShallow = new AIPlayer(_game.AIPlayerName, humanPlayerName, maxDepth: 2);
+            move = aiPlayerShallow.GetBestMove(_game);
+        }
+        
+        return move;
     }
 
     public void AddLine(int x1, int y1, int x2, int y2)
