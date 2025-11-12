@@ -1,79 +1,94 @@
 namespace EightQueens.Models
 {
     /// <summary>
-    /// Representa el tablero de ajedrez con las reinas colocadas
-    /// Responsabilidad: Gestionar el estado del tablero
+    /// Representa el tablero de ajedrez para el problema de las 8 reinas
+    /// Implementa SRP: responsabilidad única de manejar el estado del tablero
     /// </summary>
     public class Board
     {
+        private readonly int[,] _board;
         private readonly int _size;
-        private readonly int[] _queens;
 
         public int Size => _size;
-        public int[] Queens => (int[])_queens.Clone();
+        public int[,] BoardArray => (int[,])_board.Clone();
 
         public Board(int size = 8)
         {
             _size = size;
-            _queens = new int[size];
-            for (int i = 0; i < size; i++)
-            {
-                _queens[i] = -1; // -1 indica que no hay reina en esa fila
-            }
+            _board = new int[size, size];
         }
 
-        /// <summary>
-        /// Coloca una reina en la posición especificada
-        /// </summary>
-        public void PlaceQueen(int row, int column)
+        public Board(Board other)
         {
-            if (row < 0 || row >= _size || column < 0 || column >= _size)
-                throw new ArgumentOutOfRangeException("Posición fuera del tablero");
-
-            _queens[row] = column;
+            _size = other._size;
+            _board = (int[,])other._board.Clone();
         }
 
-        /// <summary>
-        /// Remueve la reina de una fila específica
-        /// </summary>
-        public void RemoveQueen(int row)
+        public bool PlaceQueen(int row, int col)
         {
-            if (row < 0 || row >= _size)
-                throw new ArgumentOutOfRangeException("Fila fuera del tablero");
+            if (row < 0 || row >= _size || col < 0 || col >= _size)
+                return false;
 
-            _queens[row] = -1;
+            _board[row, col] = 1;
+            return true;
         }
 
-        /// <summary>
-        /// Obtiene la columna donde está colocada la reina en una fila
-        /// </summary>
-        public int GetQueenColumn(int row)
+        public bool RemoveQueen(int row, int col)
         {
-            if (row < 0 || row >= _size)
-                throw new ArgumentOutOfRangeException("Fila fuera del tablero");
+            if (row < 0 || row >= _size || col < 0 || col >= _size)
+                return false;
 
-            return _queens[row];
+            _board[row, col] = 0;
+            return true;
         }
 
-        /// <summary>
-        /// Verifica si hay una reina en la posición especificada
-        /// </summary>
-        public bool HasQueenAt(int row, int column)
+        public bool HasQueen(int row, int col)
         {
-            return _queens[row] == column;
+            if (row < 0 || row >= _size || col < 0 || col >= _size)
+                return false;
+
+            return _board[row, col] == 1;
         }
 
-        /// <summary>
-        /// Clona el tablero actual
-        /// </summary>
-        public Board Clone()
+        public void Clear()
         {
-            var newBoard = new Board(_size);
             for (int i = 0; i < _size; i++)
             {
-                newBoard._queens[i] = _queens[i];
+                for (int j = 0; j < _size; j++)
+                {
+                    _board[i, j] = 0;
+                }
             }
-            return newBoard;
+        }
+
+        public List<(int row, int col)> GetQueenPositions()
+        {
+            var positions = new List<(int row, int col)>();
+            for (int i = 0; i < _size; i++)
+            {
+                for (int j = 0; j < _size; j++)
+                {
+                    if (_board[i, j] == 1)
+                    {
+                        positions.Add((i, j));
+                    }
+                }
+            }
+            return positions;
+        }
+
+        public override string ToString()
+        {
+            var result = new System.Text.StringBuilder();
+            for (int i = 0; i < _size; i++)
+            {
+                for (int j = 0; j < _size; j++)
+                {
+                    result.Append(_board[i, j] == 1 ? "♛ " : "· ");
+                }
+                result.AppendLine();
+            }
+            return result.ToString();
         }
     }
 }

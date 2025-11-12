@@ -75,7 +75,19 @@ namespace EightQueens.Web.Models
         public BoardViewModel(Board board, int solutionNumber)
         {
             Size = board.Size;
-            QueenPositions = board.Queens;
+            var positions = board.GetQueenPositions();
+            QueenPositions = new int[board.Size];
+            for (int i = 0; i < QueenPositions.Length; i++)
+            {
+                QueenPositions[i] = -1; // -1 indica que no hay reina en esta fila
+            }
+            foreach (var (row, col) in positions)
+            {
+                if (row >= 0 && row < QueenPositions.Length)
+                {
+                    QueenPositions[row] = col;
+                }
+            }
             SolutionNumber = solutionNumber;
         }
 

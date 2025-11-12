@@ -66,6 +66,19 @@ namespace EightQueens.Strategies
                 AlgorithmUsed = AlgorithmName
             };
         }
+
+        public string GetAlgorithmName()
+        {
+            return AlgorithmName;
+        }
+
+        public string GetDescription()
+        {
+            return "Algoritmo de Búsqueda en Profundidad (DFS) con Backtracking. " +
+                   "Explora el espacio de estados en profundidad, construyendo soluciones " +
+                   "parciales y retrocediendo cuando encuentra callejones sin salida. " +
+                   "Este enfoque es más natural que las permutaciones según la literatura especializada.";
+        }
     }
 
     /// <summary>

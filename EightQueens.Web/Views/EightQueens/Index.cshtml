@@ -30,35 +30,28 @@
                     <i class="fas fa-cogs text-primary me-2"></i>Configuración del Problema
                 </h5>
                 
-                @using (Html.BeginForm("Solve", "EightQueens", FormMethod.Post, new { @class = "text-center" }))
-                {
+                <div id="solveForm" class="text-center">
                     <div class="row align-items-end">
                         <div class="col-md-6 mb-3">
                             <label for="boardSize" class="form-label fw-bold">Tamaño del Tablero (N×N):</label>
                             <select name="boardSize" id="boardSize" class="form-select form-select-lg">
-                                <option value="4" selected="@(Model.BoardSize == 4)">4×4 (2 soluciones)</option>
-                                <option value="5" selected="@(Model.BoardSize == 5)">5×5 (10 soluciones)</option>
-                                <option value="6" selected="@(Model.BoardSize == 6)">6×6 (4 soluciones)</option>
-                                <option value="7" selected="@(Model.BoardSize == 7)">7×7 (40 soluciones)</option>
-                                <option value="8" selected="@(Model.BoardSize == 8)">8×8 (92 soluciones)</option>
-                                <option value="9" selected="@(Model.BoardSize == 9)">9×9 (352 soluciones)</option>
-                                <option value="10" selected="@(Model.BoardSize == 10)">10×10 (724 soluciones)</option>
+                                <option value="8" selected>8×8 (92 soluciones)</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <button type="submit" class="btn btn-uta-primary btn-lg w-100">
+                            <button type="submit" id="solveButton" class="btn btn-uta-primary btn-lg w-100">
                                 <i class="fas fa-play me-2"></i>Resolver Problema
                             </button>
                         </div>
                     </div>
-                }
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Mensaje de estado -->
-@if (!string.IsNullOrEmpty(Model.StatusMessage))
+@if (!string.IsNullOrEmpty(Model?.StatusMessage))
 {
     <div class="alert @(Model.IsSolved && Model.TotalSolutions > 0 ? "alert-success" : "alert-danger") alert-uta animate-fade-in">
         <i class="fas @(Model.IsSolved && Model.TotalSolutions > 0 ? "fa-check-circle" : "fa-exclamation-triangle") me-2"></i>
@@ -235,9 +228,191 @@
 
 @section Scripts {
 <script>
-    let solutions = @Html.Raw(Json.Serialize(Model.Solutions));
+    let solutions = @Html.Raw(Json.Serialize(Model?.Solutions ?? new List<EightQueens.Web.Models.BoardViewModel>()));
     let currentIndex = 0;
-    let boardSize = @Model.BoardSize;
+    let boardSize = @(Model?.BoardSize ?? 8);
+
+    // Manejar el botón con AJAX
+    document.getElementById('solveButton').addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        console.log('Botón clickeado'); // Debug
+        
+        const boardSizeSelect = document.getElementById('boardSize');
+        const selectedSize = parseInt(boardSizeSelect.value);
+        const solveButton = document.getElementById('solveButton');
+        
+        // Mostrar estado de carga
+        solveButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Resolviendo...';
+        solveButton.disabled = true;
+        
+        console.log('Enviando petición para tamaño:', selectedSize); // Debug
+        
+        // Llamada AJAX simplificada
+        fetch('/EightQueens/SolveAjax', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+            },
+            body: JSON.stringify({ boardSize: selectedSize })
+        })
+        .then(response => {
+            console.log('Respuesta recibida:', response); // Debug
+            return response.json();
+        })
+        .then(data => {
+            console.log('Datos:', data); // Debug
+            
+            if (data.success) {
+                // Actualizar variables globales
+                solutions = data.solutions;
+                currentIndex = 0;
+                boardSize = data.boardSize;
+                
+                // Mostrar mensaje de éxito
+                showSuccess(`¡Éxito! Encontradas ${data.solutionsCount} soluciones en ${data.executionTimeMs.toFixed(2)} ms`);
+                
+                // Mostrar controles de navegación
+                showNavigationControls();
+                
+                // Renderizar primera solución si existe
+                if (data.solutions.length > 0) {
+                    renderBoardFromData(data.solutions[0]);
+                    updateSolution(); // Actualizar botones y contador
+                }
+            } else {
+                showError(data.message || 'Error desconocido');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error); // Debug
+            showError('Error de conexión: ' + error.message);
+        })
+        .finally(() => {
+            // Restaurar botón
+            solveButton.innerHTML = '<i class="fas fa-play me-2"></i>Resolver Problema';
+            solveButton.disabled = false;
+        });
+    });
+
+    function showSuccess(message) {
+        // Crear o actualizar elemento de mensaje
+        let statusDiv = document.querySelector('.status-message');
+        if (!statusDiv) {
+            statusDiv = document.createElement('div');
+            statusDiv.className = 'status-message';
+            // Insertar después del formulario
+            const form = document.getElementById('solveForm');
+            form.parentNode.insertBefore(statusDiv, form.nextSibling);
+        }
+        
+        statusDiv.className = 'status-message alert alert-success mt-3';
+        statusDiv.innerHTML = `<i class="fas fa-check-circle me-2"></i>${message}`;
+        statusDiv.style.display = 'block';
+    }
+
+    function showError(message) {
+        // Crear o actualizar elemento de mensaje
+        let statusDiv = document.querySelector('.status-message');
+        if (!statusDiv) {
+            statusDiv = document.createElement('div');
+            statusDiv.className = 'status-message';
+            // Insertar después del formulario
+            const form = document.getElementById('solveForm');
+            form.parentNode.insertBefore(statusDiv, form.nextSibling);
+        }
+        
+        statusDiv.className = 'status-message alert alert-danger mt-3';
+        statusDiv.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i>${message}`;
+        statusDiv.style.display = 'block';
+    }
+
+    function updateUI(data) {
+        // Actualizar mensaje de estado
+        const statusDiv = document.querySelector('.alert') || document.createElement('div');
+        statusDiv.className = 'alert alert-success';
+        statusDiv.innerHTML = `<i class="fas fa-check-circle me-2"></i>¡Éxito! Encontradas ${data.solutionsCount} soluciones en ${data.executionTimeMs.toFixed(2)} ms`;
+        
+        // Actualizar estadísticas
+        document.querySelector('.stat-item:nth-child(1) h3').textContent = data.solutionsCount;
+        document.querySelector('.stat-item:nth-child(2) h3').textContent = data.executionTimeMs.toFixed(2) + ' ms';
+        document.querySelector('.stat-item:nth-child(3) h3').textContent = data.algorithm;
+        
+        // Renderizar primera solución
+        if (data.solutions.length > 0) {
+            renderBoardFromData(data.solutions[0]);
+            updateSolutionNavigation();
+        }
+        
+        // Mostrar controles de navegación
+        document.querySelector('.solution-navigation').style.display = data.solutions.length > 1 ? 'block' : 'none';
+    }
+
+    function renderBoardFromData(solutionData) {
+        console.log('Renderizando tablero:', solutionData); // Debug
+        
+        // Crear contenedor si no existe
+        let container = document.getElementById('chess-board-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'chess-board-container';
+            container.className = 'chess-board-container mt-4';
+            
+            // Insertar después del mensaje de estado
+            const statusMsg = document.querySelector('.status-message');
+            if (statusMsg) {
+                statusMsg.parentNode.insertBefore(container, statusMsg.nextSibling);
+            } else {
+                document.querySelector('.page-header').appendChild(container);
+            }
+        }
+        
+        const board = document.createElement('div');
+        board.className = 'chess-board mx-auto';
+        board.style.display = 'grid';
+        board.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`;
+        board.style.gap = '2px';
+        board.style.maxWidth = '400px';
+        board.style.border = '2px solid #003d7a';
+        
+        for (let row = 0; row < boardSize; row++) {
+            for (let col = 0; col < boardSize; col++) {
+                const cell = document.createElement('div');
+                cell.style.width = '40px';
+                cell.style.height = '40px';
+                cell.style.display = 'flex';
+                cell.style.alignItems = 'center';
+                cell.style.justifyContent = 'center';
+                cell.style.fontSize = '24px';
+                
+                // Verificar si hay reina en esta posición
+                const hasQueen = solutionData.queens && solutionData.queens.some(q => q.row === row && q.col === col);
+                
+                if (hasQueen) {
+                    cell.style.backgroundColor = '#ffd700';
+                    cell.innerHTML = '♛';
+                    cell.style.color = '#003d7a';
+                } else {
+                    cell.style.backgroundColor = (row + col) % 2 === 0 ? '#f8f9fa' : '#6c757d';
+                    cell.style.color = (row + col) % 2 === 0 ? '#000' : '#fff';
+                }
+                
+                board.appendChild(cell);
+            }
+        }
+        
+        container.innerHTML = '';
+        container.appendChild(board);
+        
+        // Mostrar coordenadas
+        if (solutionData.queens) {
+            const coordsDiv = document.createElement('div');
+            coordsDiv.className = 'mt-2 text-center';
+            coordsDiv.innerHTML = `<strong>Posiciones:</strong> ${solutionData.queens.map(q => `(${q.row + 1},${q.col + 1})`).join(', ')}`;
+            container.appendChild(coordsDiv);
+        }
+    }
 
     function renderBoard(boardData) {
         const container = document.getElementById('chess-board-container');
@@ -285,12 +460,68 @@
     }
 
     function updateSolution() {
-        document.getElementById('current-solution').textContent = currentIndex + 1;
-        renderBoard(solutions[currentIndex]);
+        if (solutions.length === 0) return;
+        
+        // Actualizar contador
+        const currentSolElement = document.getElementById('current-solution');
+        if (currentSolElement) {
+            currentSolElement.textContent = currentIndex + 1;
+        }
+        
+        // Renderizar tablero actual
+        if (solutions[currentIndex]) {
+            renderBoardFromData(solutions[currentIndex]);
+        }
         
         // Actualizar botones
-        document.getElementById('prev-btn').disabled = currentIndex === 0;
-        document.getElementById('next-btn').disabled = currentIndex === solutions.length - 1;
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        if (prevBtn) prevBtn.disabled = currentIndex === 0;
+        if (nextBtn) nextBtn.disabled = currentIndex === solutions.length - 1;
+        
+        console.log(`Mostrando solución ${currentIndex + 1} de ${solutions.length}`);
+    }
+
+    function showNavigationControls() {
+        // Buscar o crear la sección de navegación
+        let navSection = document.querySelector('.solution-navigation');
+        if (!navSection) {
+            navSection = document.createElement('div');
+            navSection.className = 'solution-navigation row mb-3';
+            navSection.innerHTML = `
+                <div class="col-md-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-chess-queen text-warning me-2"></i>
+                            Solución <span id="current-solution">1</span> de <span id="total-solutions">0</span>
+                        </h4>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-primary" onclick="previousSolution()" id="prev-btn">
+                                <i class="fas fa-chevron-left"></i> Anterior
+                            </button>
+                            <button type="button" class="btn btn-outline-primary" onclick="nextSolution()" id="next-btn">
+                                Siguiente <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Insertar después del mensaje de estado
+            const statusMsg = document.querySelector('.status-message');
+            if (statusMsg) {
+                statusMsg.parentNode.insertBefore(navSection, statusMsg.nextSibling);
+            }
+        }
+        
+        // Actualizar total de soluciones
+        const totalSolElement = document.getElementById('total-solutions');
+        if (totalSolElement) {
+            totalSolElement.textContent = solutions.length;
+        }
+        
+        // Mostrar/ocultar según cantidad de soluciones
+        navSection.style.display = solutions.length > 1 ? 'block' : 'none';
     }
 
     // Inicializar al cargar la página

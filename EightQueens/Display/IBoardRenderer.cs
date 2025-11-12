@@ -3,11 +3,11 @@ using EightQueens.Models;
 namespace EightQueens.Display
 {
     /// <summary>
-    /// Interfaz para renderizar el tablero
-    /// Principio: Dependency Inversion Principle (DIP)
+    /// Interface para renderizar el tablero
+    /// Implementa DIP: depende de abstracciones
     /// </summary>
     public interface IBoardRenderer
     {
-        void Render(Board board, int solutionNumber);
+        void Render(Board board);
     }
 }

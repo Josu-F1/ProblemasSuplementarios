@@ -142,7 +142,7 @@ namespace EightQueens.Strategies
         {
             _boardSize = parent._boardSize;
             _conflictChecker = parent._conflictChecker;
-            _board = parent._board.Clone();
+            _board = new Board(parent._board);
             _currentRow = row;
             _currentColumn = column;
             Parent = parent;
@@ -167,7 +167,7 @@ namespace EightQueens.Strategies
             get
             {
                 if (_currentRow < 0) return true; // Nodo raíz es siempre válido
-                return _conflictChecker.IsSafe(_board, _currentRow, _currentColumn);
+                return !_conflictChecker.HasConflict(_board, _currentRow, _currentColumn);
             }
         }
 
@@ -237,7 +237,7 @@ namespace EightQueens.Strategies
         /// </summary>
         public Board ToBoard()
         {
-            return _board.Clone();
+            return new Board(_board);
         }
 
         public override string ToString()

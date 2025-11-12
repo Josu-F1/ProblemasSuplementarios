@@ -1,46 +1,80 @@
 using EightQueens.Models;
-using EightQueens.Strategies;
+using EightQueens.Services;
+using EightQueens.Display;
 
 namespace EightQueens.Services
 {
     /// <summary>
-    /// Contexto del patrón Strategy
-    /// Responsabilidad: Coordinar la resolución del problema usando la estrategia seleccionada
+    /// Servicio principal para resolver el problema de las 8 reinas
+    /// Implementa Strategy Pattern para diferentes algoritmos
     /// </summary>
     public class QueensSolver
     {
-        private ISolverStrategy _strategy;
+        private readonly ISolverStrategy _strategy;
+        private readonly IBoardRenderer _renderer;
 
-        public QueensSolver(ISolverStrategy strategy)
+        public QueensSolver(ISolverStrategy strategy, IBoardRenderer renderer)
         {
             _strategy = strategy ?? throw new ArgumentNullException(nameof(strategy));
+            _renderer = renderer ?? throw new ArgumentNullException(nameof(renderer));
         }
 
-        /// <summary>
-        /// Cambia la estrategia de resolución en tiempo de ejecución
-        /// </summary>
-        public void SetStrategy(ISolverStrategy strategy)
-        {
-            _strategy = strategy ?? throw new ArgumentNullException(nameof(strategy));
-        }
-
-        /// <summary>
-        /// Resuelve el problema usando la estrategia actual
-        /// </summary>
         public List<Board> Solve(int boardSize = 8)
         {
-            Console.WriteLine($"Resolviendo con algoritmo: {_strategy.AlgorithmName}");
+            Console.WriteLine($"=== PROBLEMA DE LAS {boardSize} REINAS ===");
+            Console.WriteLine($"Algoritmo: {_strategy.GetAlgorithmName()}");
+            Console.WriteLine($"Descripción: {_strategy.GetDescription()}");
+            Console.WriteLine(new string('=', 50));
+
             var startTime = DateTime.Now;
-
             var solutions = _strategy.Solve(boardSize);
-
             var endTime = DateTime.Now;
-            var elapsed = endTime - startTime;
 
-            Console.WriteLine($"Soluciones encontradas: {solutions.Count}");
-            Console.WriteLine($"Tiempo de ejecución: {elapsed.TotalMilliseconds} ms\n");
+            Console.WriteLine($"\n⏱️ Tiempo de ejecución: {(endTime - startTime).TotalMilliseconds:F2} ms");
+            Console.WriteLine($"🎯 Soluciones encontradas: {solutions.Count}");
+
+            if (solutions.Count > 0)
+            {
+                Console.WriteLine("\n🏆 Primera solución encontrada:");
+                _renderer.Render(solutions[0]);
+
+                if (solutions.Count > 1)
+                {
+                    Console.WriteLine("\n¿Desea ver más soluciones? (s/n)");
+                    var response = Console.ReadKey().KeyChar;
+                    if (response == 's' || response == 'S')
+                    {
+                        ShowAllSolutions(solutions);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("❌ No se encontraron soluciones para este tamaño de tablero.");
+            }
 
             return solutions;
+        }
+
+        public void SolveAndDisplay(int boardSize = 8)
+        {
+            var solutions = Solve(boardSize);
+            // Display logic is already handled in Solve method
+        }
+
+        private void ShowAllSolutions(List<Board> solutions)
+        {
+            for (int i = 1; i < solutions.Count; i++)
+            {
+                Console.WriteLine($"\n🎯 Solución {i + 1}:");
+                _renderer.Render(solutions[i]);
+                
+                if ((i + 1) % 5 == 0 && i < solutions.Count - 1)
+                {
+                    Console.WriteLine("\nPresione cualquier tecla para continuar...");
+                    Console.ReadKey();
+                }
+            }
         }
     }
 }
