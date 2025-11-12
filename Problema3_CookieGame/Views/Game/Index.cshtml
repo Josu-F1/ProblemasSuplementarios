@@ -1,16 +1,54 @@
 ﻿@model Problema3_CookieGame.Models.GameState
-@{
-    var puntosJugador1 = Model.Squares.Count(s => s.Owner == Model.Player1.Name);
-    var puntosJugador2 = Model.Squares.Count(s => s.Owner == Model.Player2.Name);
-}
 
 <h2>Juego de la Galleta</h2>
-<p>Turno actual: <strong>@Model.CurrentPlayer</strong></p>
-<p>Puntaje:</p>
-<ul>
-    <li>@Model.Player1.Name (@Model.Player1): @puntosJugador1</li>
-    <li>@Model.Player2.Name (@Model.Player2): @puntosJugador2</li>
-</ul>
+
+<div id="gameInfoContainer">
+    @if (Model.GameOver)
+    {
+        <div id="gameOverMessage">
+            <div class="alert alert-success" role="alert">
+                <h3>¡Juego Terminado!</h3>
+                @{
+                    string winner = Model.Player1.Score > Model.Player2.Score ? Model.Player1.Name :
+                                   Model.Player2.Score > Model.Player1.Score ? Model.Player2.Name : "Empate";
+                }
+                @if (winner == "Empate")
+                {
+                    <p><strong>¡Empate! Ambos jugadores tienen @Model.Player1.Score puntos.</strong></p>
+                }
+                else
+                {
+                    <p><strong>¡@winner gana con @(winner == Model.Player1.Name ? Model.Player1.Score : Model.Player2.Score) puntos!</strong></p>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div id="gameOverMessage" style="display: none;"></div>
+    }
+    <div class="game-info">
+        <p class="current-turn">
+            <strong>Turno actual: </strong>
+            <span id="currentPlayerName" style="color: @(Model.CurrentPlayer == Model.Player1.Name ? Model.Player1.Color : Model.Player2.Color); font-weight: bold;">
+                @Model.CurrentPlayer
+            </span>
+        </p>
+        <div class="scores">
+            <p><strong>Puntaje:</strong></p>
+            <ul>
+                <li>
+                    <span id="player1Name" style="color: @Model.Player1.Color; font-weight: bold;">@Model.Player1.Name</span>: 
+                    <strong id="player1Score">@Model.Player1.Score</strong> puntos
+                </li>
+                <li>
+                    <span id="player2Name" style="color: @Model.Player2.Color; font-weight: bold;">@Model.Player2.Name</span>: 
+                    <strong id="player2Score">@Model.Player2.Score</strong> puntos
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 <div id="gameBoardContainer">
     @Html.Partial("_GameBoard", Model)
@@ -48,16 +86,86 @@
         }
 
         function sendLine(p1, p2) {
+            // Primero actualizar el tablero
             fetch("/Game/AddLine", {
                 method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                headers: { 
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
                 body: `x1=${p1.x}&y1=${p1.y}&x2=${p2.x}&y2=${p2.y}`
             })
             .then(response => response.text())
             .then(html => {
                 document.getElementById("gameBoardContainer").innerHTML = html;
                 attachClickEvents(); // ← Reasignar eventos después de actualizar el tablero
+                
+                // Luego obtener el estado del juego
+                return fetch("/Game/GetGameState", {
+                    method: "GET",
+                    headers: { 
+                        "Accept": "application/json"
+                    }
+                });
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateGameInfo(data);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                // Fallback: recargar la página si hay error
+                location.reload();
             });
+        }
+        
+        function updateGameInfo(data) {
+            // Actualizar turno actual
+            const currentPlayerSpan = document.getElementById("currentPlayerName");
+            if (currentPlayerSpan) {
+                currentPlayerSpan.textContent = data.currentPlayer;
+                const playerColor = data.currentPlayer === data.player1Name ? data.player1Color : data.player2Color;
+                currentPlayerSpan.style.color = playerColor;
+            }
+            
+            // Actualizar puntuaciones
+            const player1Score = document.getElementById("player1Score");
+            const player2Score = document.getElementById("player2Score");
+            if (player1Score) player1Score.textContent = data.player1Score;
+            if (player2Score) player2Score.textContent = data.player2Score;
+            
+            // Actualizar nombres de jugadores (por si acaso)
+            const player1Name = document.getElementById("player1Name");
+            const player2Name = document.getElementById("player2Name");
+            if (player1Name) {
+                player1Name.textContent = data.player1Name;
+                player1Name.style.color = data.player1Color;
+            }
+            if (player2Name) {
+                player2Name.textContent = data.player2Name;
+                player2Name.style.color = data.player2Color;
+            }
+            
+            // Mostrar mensaje de fin de juego
+            const gameOverMessage = document.getElementById("gameOverMessage");
+            if (data.gameOver && gameOverMessage) {
+                let message = "";
+                if (data.winner === "Empate") {
+                    message = `<div class="alert alert-success" role="alert">
+                        <h3>¡Juego Terminado!</h3>
+                        <p><strong>¡Empate! Ambos jugadores tienen ${data.player1Score} puntos.</strong></p>
+                    </div>`;
+                } else {
+                    const winnerScore = data.winner === data.player1Name ? data.player1Score : data.player2Score;
+                    message = `<div class="alert alert-success" role="alert">
+                        <h3>¡Juego Terminado!</h3>
+                        <p><strong>¡${data.winner} gana con ${winnerScore} puntos!</strong></p>
+                    </div>`;
+                }
+                gameOverMessage.innerHTML = message;
+                gameOverMessage.style.display = "block";
+            } else if (gameOverMessage) {
+                gameOverMessage.style.display = "none";
+            }
         }
 
         document.addEventListener("DOMContentLoaded", attachClickEvents);

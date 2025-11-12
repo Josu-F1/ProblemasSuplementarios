@@ -17,6 +17,7 @@ public class GameState
 
 
     public string CurrentPlayer { get; set; } = "Jugador1";
+    public bool GameOver { get; set; } = false;
 
     public List<(int x, int y)> CookiePoints => GenerateCookiePoints();
 
@@ -45,5 +46,27 @@ public class GameState
         var valid = CookiePoints.ToHashSet();
         return valid.Contains((line.X1, line.Y1)) && valid.Contains((line.X2, line.Y2));
     }
+
+    public int TotalPossibleTabless
+    {
+        get
+        {
+            var valid = CookiePoints.ToHashSet();
+            int count = 0;
+
+            foreach (var (x, y) in CookiePoints)
+            {
+                if (valid.Contains((x + 1, y)) &&
+                    valid.Contains((x, y + 1)) &&
+                    valid.Contains((x + 1, y + 1)))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+    }
+
 
 }
