@@ -1,7 +1,8 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8" />
+  <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Problema de las 8 Reinas | UTA</title>
     
@@ -147,52 +148,51 @@
     </style>
 </head>
 <body>
-    @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">
+            @{
+    var mainBase = Configuration["MainApp:BaseUrl"] ?? "https://localhost:58555";
+                var cookieBase = Configuration["CookieGame:BaseUrl"] ?? "http://localhost:5147";
+                var cookieUrl  = cookieBase.TrimEnd('/') + "/Game";
+            }
+
+            <a class="navbar-brand" href="@mainBase">
                 <i class="fas fa-chess-queen me-2"></i>
                 Problema de las 8 Reinas
             </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">
+                        <a class="nav-link" href="@mainBase">
                             <i class="fas fa-home me-1"></i>Inicio
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/EightQueens/About">
+                        <a class="nav-link" href="@(mainBase.TrimEnd('/') + "/EightQueens/About")">
                             <i class="fas fa-info-circle me-1"></i>Acerca del Algoritmo
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/EightPuzzle">
+                        <a class="nav-link" href="@(mainBase.TrimEnd('/') + "/EightPuzzle")">
                             <i class="fas fa-th-large me-1"></i>8-Puzzle
                         </a>
                     </li>
                     <li class="nav-item">
-                        <!-- Enlace directo al juego de la galleta usando la configuración CookieGame:BaseUrl -->
-                        @{ 
-                            var cookieBase = Configuration["CookieGame:BaseUrl"] ?? "http://localhost:5147";
-                            var cookieUrl = cookieBase.TrimEnd('/') + "/Game";
-                        }
                         <a class="nav-link" href="@cookieUrl" target="_self">
-                            <i class="fas fa-th-large me-1"></i>Juego de la Galleta
+                            <i class="fas fa-cookie-bite me-1"></i>Juego de la Galleta
                         </a>
                     </li>
-  <li class="nav-item">
-    @{
-        var sudokuBase = Configuration["SudokuGame:BaseUrl"] ?? "http://localhost:5012";
-        var sudokuUrl = sudokuBase.TrimEnd('/'); 
-    }
-    <a class="nav-link" href="@sudokuUrl" target="_self">
-        <i class="fas fa-border-all me-1"></i>Sudoku
-    </a>
-</li>
+                    <li class="nav-item">
+                        <!-- Estás ya en Sudoku, puedes dejarlo desactivado o solo texto -->
+                        <a class="nav-link active" aria-current="page" href="#">
+                            <i class="fas fa-border-all me-1"></i>Sudoku
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -203,8 +203,7 @@
             @RenderBody()
         </div>
     </div>
-
-    <footer class="footer">
+ <footer class="footer">
         <div class="container">
             <p class="mb-0">
                 <i class="fas fa-university me-2"></i>
