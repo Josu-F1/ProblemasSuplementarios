@@ -10,6 +10,15 @@ builder.Services.AddControllersWithViews()
     .AddApplicationPart(typeof(Problema4_Sudoku.Controllers.SudokuController).Assembly)
     ;
 
+// Configurar ubicaciones de vistas para incluir vistas de otros proyectos
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.Razor.RazorViewEngineOptions>(options =>
+{
+    options.ViewLocationFormats.Add("/Views/{1}/{0}.cshtml");
+    options.ViewLocationFormats.Add("/Views/Shared/{0}.cshtml");
+    options.AreaViewLocationFormats.Add("/Areas/{2}/Views/{1}/{0}.cshtml");
+    options.AreaViewLocationFormats.Add("/Areas/{2}/Views/Shared/{0}.cshtml");
+});
+
 // Registrar el GameService del proyecto CookieGame (era singleton en su propio Program.cs)
 builder.Services.AddSingleton<Problema3_CookieGame.Services.GameService>();
 

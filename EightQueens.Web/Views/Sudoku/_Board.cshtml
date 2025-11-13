@@ -1,0 +1,23 @@
+@model Problema4_Sudoku.Models.SudokuBoard
+<div class="sudoku-container">
+    <table class="sudoku-grid">
+        @for (int r = 0; r < 9; r++)
+        {
+            <tr>
+                @for (int c = 0; c < 9; c++)
+                {
+                    var cell = Model.Cells[r, c];
+                    <td class="cell @((r % 3 == 2 && r != 8 ? "hthick" : "")) @((c % 3 == 2 && c != 8 ? "vthick" : ""))">
+                        <input type="text"
+                               inputmode="numeric"
+                               maxlength="1"
+                               class="cell-input @(cell.IsFixed ? "fixed" : "")"
+                               data-r="@r" data-c="@c"
+                               value="@(cell.Value == 0 ? "" : cell.Value.ToString())"
+                               @(cell.IsFixed ? "readonly" : "") />
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+</div>
