@@ -1,0 +1,48 @@
+@model Problema4_Sudoku.Models.SudokuBoard
+@{
+    ViewData["Title"] = "Sudoku – IA";
+}
+
+<link rel="stylesheet" href="~/css/sudoku.css" />
+
+<div class="page-header">
+    <h1><i class="fas fa-border-all me-2"></i>Sudoku</h1>
+    <p>Resuelve automáticamente usando algoritmos de inteligencia artificial</p>
+</div>
+
+<div class="toolbar mb-4">
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
+        <button id="btnDemo" class="btn btn-outline-primary">
+            <i class="fas fa-play me-1"></i>Cargar Demo
+        </button>
+        <button id="btnClear" class="btn btn-outline-secondary">
+            <i class="fas fa-eraser me-1"></i>Limpiar
+        </button>
+        <button id="btnCheck" class="btn btn-outline-info">
+            <i class="fas fa-check me-1"></i>Comprobar
+        </button>
+        <button id="btnSolve" class="btn btn-uta-primary">
+            <i class="fas fa-magic me-1"></i>Resolver (Instantáneo)
+        </button>
+        <button id="btnStep" class="btn btn-outline-warning">
+            <i class="fas fa-step-forward me-1"></i>Resolver Paso a Paso
+        </button>
+    </div>
+    
+    <div class="mt-2 text-center">
+        <label class="form-check-label d-inline-flex align-items-center gap-2">
+            <input type="checkbox" id="liveCheck" class="form-check-input" /> 
+            <span>Validación en vivo</span>
+        </label>
+    </div>
+    
+    <div class="mt-2 text-center">
+        <span id="status" class="badge bg-secondary">Listo.</span>
+    </div>
+</div>
+
+<div id="boardContainer" class="d-flex justify-content-center">
+    @await Html.PartialAsync("_Board", Model)
+</div>
+
+<script src="~/js/sudoku.js"></script>

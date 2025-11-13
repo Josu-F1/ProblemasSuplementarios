@@ -1,0 +1,395 @@
+﻿@model Problema3_CookieGame.Models.GameState
+
+<h2>Juego de la Galleta</h2>
+
+<div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
+    <h3 style="margin-top: 0;">Seleccionar Modo de Juego</h3>
+    <div style="display: flex; gap: 20px; align-items: center;">
+        <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="radio" name="gameMode" id="modePlayerVsPlayer" value="player" @(!Model.IsAIMode ? "checked" : "") style="margin-right: 8px;" />
+            <strong>Jugador 1 vs Jugador 2</strong>
+        </label>
+        <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="radio" name="gameMode" id="modePlayerVsAI" value="ai" @(Model.IsAIMode ? "checked" : "") style="margin-right: 8px;" />
+            <strong>Jugador vs IA</strong>
+        </label>
+        <button id="applyGameMode" style="margin-left: auto; padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Aplicar Modo
+        </button>
+    </div>
+    <p style="margin: 10px 0 0 0; font-size: 0.9em; color: #666;">
+        <em>Nota: Al cambiar el modo de juego, el juego se reiniciará automáticamente.</em>
+    </p>
+</div>
+
+<div id="gameInfoContainer">
+    @if (Model.GameOver)
+    {
+        <div id="gameOverMessage">
+            <div class="alert alert-success" role="alert">
+                <h3>¡Juego Terminado!</h3>
+                @{
+                    string winner = Model.Player1.Score > Model.Player2.Score ? Model.Player1.Name :
+                                   Model.Player2.Score > Model.Player1.Score ? Model.Player2.Name : "Empate";
+                }
+                @if (winner == "Empate")
+                {
+                    <p><strong>¡Empate! Ambos jugadores tienen @Model.Player1.Score puntos.</strong></p>
+                }
+                else
+                {
+                    <p><strong>¡@winner gana con @(winner == Model.Player1.Name ? Model.Player1.Score : Model.Player2.Score) puntos!</strong></p>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div id="gameOverMessage" style="display: none;"></div>
+    }
+    <div class="game-info">
+        <div style="margin-bottom: 10px; padding: 8px; background-color: @(Model.IsAIMode ? "#e8f5e9" : "#e3f2fd"); border-left: 4px solid @(Model.IsAIMode ? "#4caf50" : "#2196f3");">
+            <strong>Modo actual: </strong>
+            <span id="currentModeDisplay">@(Model.IsAIMode ? "Jugador vs IA" : "Jugador 1 vs Jugador 2")</span>
+        </div>
+        <p class="current-turn">
+            <strong>Turno actual: </strong>
+            <span id="currentPlayerName" style="color: @(Model.CurrentPlayer == Model.Player1.Name ? Model.Player1.Color : Model.Player2.Color); font-weight: bold;">
+                @Model.CurrentPlayer
+            </span>
+            @if (Model.IsAIMode && Model.CurrentPlayer == Model.AIPlayerName)
+            {
+                <span style="margin-left: 10px; font-size: 0.9em; color: #666;">(Pensando...)</span>
+            }
+        </p>
+        <div class="scores">
+            <p><strong>Puntaje:</strong></p>
+            <ul>
+                <li>
+                    <span id="player1Name" style="color: @Model.Player1.Color; font-weight: bold;">@Model.Player1.Name</span>: 
+                    <strong id="player1Score">@Model.Player1.Score</strong> puntos
+                </li>
+                <li>
+                    <span id="player2Name" style="color: @Model.Player2.Color; font-weight: bold;">@Model.Player2.Name</span>: 
+                    <strong id="player2Score">@Model.Player2.Score</strong> puntos
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="gameBoardContainer">
+    <partial name="_GameBoard" model="Model" />
+</div>
+
+<form method="post" asp-action="Reset">
+    <button type="submit">Reiniciar Juego</button>
+</form>
+
+@section Scripts {
+    <script>
+        let firstPoint = null;
+
+        function attachClickEvents() {
+            document.querySelectorAll(".cookie-point").forEach(circle => {
+                circle.addEventListener("click", () => {
+                    const x = parseInt(circle.dataset.x);
+                    const y = parseInt(circle.dataset.y);
+
+                    if (!firstPoint) {
+                        firstPoint = { x, y };
+                        circle.setAttribute("fill", "orange");
+                    } else {
+                        const secondPoint = { x, y };
+                        sendLine(firstPoint, secondPoint);
+                        firstPoint = null;
+                        resetPointColors();
+                    }
+                });
+            });
+        }
+
+        function resetPointColors() {
+            document.querySelectorAll(".cookie-point").forEach(c => c.setAttribute("fill", "brown"));
+        }
+
+        function sendLine(p1, p2) {
+            // Enviar jugada con JSON para obtener respuesta completa
+            fetch("/Game/AddLine", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: `x1=${p1.x}&y1=${p1.y}&x2=${p2.x}&y2=${p2.y}`
+            })
+            .then(response => {
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    return response.json().then(data => ({ json: data }));
+                } else {
+                    return response.text().then(html => ({ html: html }));
+                }
+            })
+            .then(result => {
+                if (result.html) {
+                    // Actualizar tablero con HTML
+                    document.getElementById("gameBoardContainer").innerHTML = result.html;
+                    attachClickEvents();
+                    
+                    // Obtener estado del juego
+                    return fetch("/Game/GetGameState", {
+                        method: "GET",
+                        headers: { "Accept": "application/json" }
+                    }).then(r => r.json());
+                } else {
+                    // Ya tenemos el JSON, actualizar estado primero
+                    updateGameInfo(result.json);
+                    
+                    // Recargar tablero para ver cambios (incluyendo jugada de IA si hubo)
+                    // Hacer una petición para obtener el tablero actualizado
+                    return fetch("/Game/AddLine", {
+                        method: "POST",
+                        headers: { 
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: "x1=-1&y1=-1&x2=-1&y2=-1"
+                    })
+                    .then(r => r.text())
+                    .then(html => {
+                        // Si recibimos HTML, actualizar el tablero
+                        if (html && html.trim().startsWith("<")) {
+                            document.getElementById("gameBoardContainer").innerHTML = html;
+                            attachClickEvents();
+                        }
+                        return result.json;
+                    })
+                    .catch(() => {
+                        // Si falla, recargar la página completa
+                        location.reload();
+                        return result.json;
+                    });
+                }
+            })
+            .then(data => {
+                if (data) {
+                    updateGameInfo(data);
+                    
+                    console.log("Estado después de jugada:", {
+                        isAIMode: data.isAIMode,
+                        isAITurn: data.isAITurn,
+                        currentPlayer: data.currentPlayer,
+                        gameOver: data.gameOver
+                    });
+                    
+                    // Si es modo IA y es turno de la IA después de la jugada del jugador, ejecutar jugada de IA
+                    if (data.isAIMode && data.isAITurn && !data.gameOver) {
+                        console.log("Es turno de la IA, ejecutando jugada en 800ms...");
+                        setTimeout(() => {
+                            makeAIMove();
+                        }, 800);
+                    } else if (data.isAIMode && !data.isAITurn) {
+                        console.log("No es turno de la IA. Turno actual:", data.currentPlayer);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                location.reload();
+            });
+        }
+        
+        function makeAIMove() {
+            console.log("Ejecutando jugada de IA...");
+            fetch("/Game/MakeAIMove", {
+                method: "POST",
+                headers: { 
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error("Error de IA:", data.error);
+                    return;
+                }
+                
+                console.log("IA jugó:", data);
+                
+                // Actualizar estado
+                updateGameInfo(data);
+                
+                // Recargar tablero para ver la jugada de la IA
+                return fetch("/Game/AddLine", {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: "x1=-1&y1=-1&x2=-1&y2=-1"
+                })
+                .then(r => r.text())
+                .then(html => {
+                    if (html && html.trim().startsWith("<")) {
+                        document.getElementById("gameBoardContainer").innerHTML = html;
+                        attachClickEvents();
+                    }
+                    
+                    // Obtener estado actualizado
+                    return fetch("/Game/GetGameState", {
+                        method: "GET",
+                        headers: { "Accept": "application/json" }
+                    }).then(r => r.json());
+                })
+                .then(gameState => {
+                    updateGameInfo(gameState);
+                    
+                    // Si la IA puede seguir jugando (cerró un cuadrado), ejecutar otra jugada
+                    if (gameState.isAITurn && !gameState.gameOver) {
+                        setTimeout(() => {
+                            makeAIMove();
+                        }, 600);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error("Error en jugada de IA:", error);
+            });
+        }
+        
+        // Manejar cambio de modo de juego
+        document.getElementById("applyGameMode")?.addEventListener("click", () => {
+            const playerVsPlayer = document.getElementById("modePlayerVsPlayer").checked;
+            const playerVsAI = document.getElementById("modePlayerVsAI").checked;
+            
+            if (!playerVsPlayer && !playerVsAI) {
+                alert("Por favor selecciona un modo de juego");
+                return;
+            }
+            
+            const enabled = playerVsAI;
+            
+            fetch("/Game/SetAIMode", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Accept": "application/json"
+                },
+                body: `enabled=${enabled}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                // El servidor ya reinició el juego, solo recargar la página
+                location.reload();
+            })
+            .catch(error => {
+                console.error("Error al cambiar modo de juego:", error);
+                alert("Error al cambiar el modo de juego. Por favor intenta de nuevo.");
+            });
+        });
+        
+        function updateGameInfo(data) {
+            // Actualizar modo de juego
+            const currentModeDisplay = document.getElementById("currentModeDisplay");
+            if (currentModeDisplay && data.isAIMode !== undefined) {
+                currentModeDisplay.textContent = data.isAIMode ? "Jugador vs IA" : "Jugador 1 vs Jugador 2";
+            }
+            
+            // Actualizar turno actual
+            const currentPlayerSpan = document.getElementById("currentPlayerName");
+            if (currentPlayerSpan) {
+                currentPlayerSpan.textContent = data.currentPlayer;
+                const playerColor = data.currentPlayer === data.player1Name ? data.player1Color : data.player2Color;
+                currentPlayerSpan.style.color = playerColor;
+                
+                // Mostrar/ocultar indicador de "Pensando..." para la IA
+                const thinkingIndicator = currentPlayerSpan.nextElementSibling;
+                if (data.isAIMode && data.isAITurn && !data.gameOver) {
+                    if (!thinkingIndicator || thinkingIndicator.tagName !== "SPAN") {
+                        const thinking = document.createElement("span");
+                        thinking.style.marginLeft = "10px";
+                        thinking.style.fontSize = "0.9em";
+                        thinking.style.color = "#666";
+                        thinking.textContent = "(Pensando...)";
+                        currentPlayerSpan.parentNode.insertBefore(thinking, currentPlayerSpan.nextSibling);
+                    }
+                } else if (thinkingIndicator && thinkingIndicator.textContent === "(Pensando...)") {
+                    thinkingIndicator.remove();
+                }
+            }
+            
+            // Actualizar puntuaciones
+            const player1Score = document.getElementById("player1Score");
+            const player2Score = document.getElementById("player2Score");
+            if (player1Score) player1Score.textContent = data.player1Score;
+            if (player2Score) player2Score.textContent = data.player2Score;
+            
+            // Actualizar nombres de jugadores (por si acaso)
+            const player1Name = document.getElementById("player1Name");
+            const player2Name = document.getElementById("player2Name");
+            if (player1Name) {
+                player1Name.textContent = data.player1Name;
+                player1Name.style.color = data.player1Color;
+            }
+            if (player2Name) {
+                player2Name.textContent = data.player2Name;
+                player2Name.style.color = data.player2Color;
+            }
+            
+            // Mostrar mensaje de fin de juego
+            const gameOverMessage = document.getElementById("gameOverMessage");
+            if (data.gameOver && gameOverMessage) {
+                let message = "";
+                if (data.winner === "Empate") {
+                    message = `<div class="alert alert-success" role="alert">
+                        <h3>¡Juego Terminado!</h3>
+                        <p><strong>¡Empate! Ambos jugadores tienen ${data.player1Score} puntos.</strong></p>
+                    </div>`;
+                } else {
+                    const winnerScore = data.winner === data.player1Name ? data.player1Score : data.player2Score;
+                    message = `<div class="alert alert-success" role="alert">
+                        <h3>¡Juego Terminado!</h3>
+                        <p><strong>¡${data.winner} gana con ${winnerScore} puntos!</strong></p>
+                    </div>`;
+                }
+                gameOverMessage.innerHTML = message;
+                gameOverMessage.style.display = "block";
+            } else if (gameOverMessage) {
+                gameOverMessage.style.display = "none";
+            }
+            
+            // Si es modo IA y es turno de la IA al cargar la página, ejecutar jugada
+            if (data.isAIMode && data.isAITurn && !data.gameOver) {
+                setTimeout(() => {
+                    makeAIMove();
+                }, 1000);
+            }
+        }
+        
+        // Al cargar la página, verificar si es turno de la IA
+        document.addEventListener("DOMContentLoaded", () => {
+            // Obtener estado inicial del juego
+            fetch("/Game/GetGameState", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                updateGameInfo(data);
+                
+                // Si es modo IA y es turno de la IA, ejecutar jugada automáticamente
+                if (data.isAIMode && data.isAITurn && !data.gameOver) {
+                    setTimeout(() => {
+                        makeAIMove();
+                    }, 1500);
+                }
+            })
+            .catch(error => {
+                console.error("Error al obtener estado inicial:", error);
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", attachClickEvents);
+    </script>
+}

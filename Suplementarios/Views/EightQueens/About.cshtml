@@ -1,0 +1,158 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Patrones de Diseño";
+}
+
+<div class="page-header">
+    <h1><i class="fas fa-cogs text-info me-3"></i>Patrones de Diseño y Algoritmos</h1>
+    <p class="lead">Arquitectura y patrones implementados en los juegos suplementarios</p>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-chess-queen me-2"></i>8 Reinas - DFS Backtracking</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="text-primary">Patrones Implementados:</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i><strong>Strategy Pattern:</strong> Múltiples algoritmos de resolución</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>Factory Pattern:</strong> Creación de estrategias</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>Observer Pattern:</strong> Renderizado del tablero</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>DIP:</strong> Inyección de dependencias</li>
+                </ul>
+                
+                <h6 class="text-primary mt-3">Algoritmos:</h6>
+                <p><strong>DFS Backtracking</strong> con poda inteligente. Reduce de 40,320 permutaciones a ~2,056 nodos explorados.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-th-large me-2"></i>8-Puzzle - Algoritmo A*</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="text-primary">Patrones Implementados:</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i><strong>Strategy Pattern:</strong> Diferentes heurísticas</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>State Pattern:</strong> Estados del tablero</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>Command Pattern:</strong> Movimientos</li>
+                </ul>
+                
+                <h6 class="text-primary mt-3">Algoritmos:</h6>
+                <p><strong>A* Search</strong> con heurística Manhattan. Encuentra el camino óptimo usando cola de prioridad y evaluación f(n) = g(n) + h(n).</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-cookie-bite me-2"></i>Juego de la Galleta - IA Minimax</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="text-primary">Patrones Implementados:</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i><strong>Strategy Pattern:</strong> Diferentes niveles de IA</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>State Pattern:</strong> Estado del juego</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>Singleton:</strong> GameService</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>MVC:</strong> Separación de responsabilidades</li>
+                </ul>
+                
+                <h6 class="text-primary mt-3">Algoritmos:</h6>
+                <p><strong>Minimax con poda Alpha-Beta</strong>. IA que evalúa movimientos estratégicos y prioriza cerrar cuadrados.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-border-all me-2"></i>Sudoku - Backtracking</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="text-primary">Patrones Implementados:</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success me-2"></i><strong>Strategy Pattern:</strong> Múltiples estrategias de resolución</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>Validator Pattern:</strong> Validación de reglas</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>Factory Pattern:</strong> Generación de puzzles</li>
+                    <li><i class="fas fa-check text-success me-2"></i><strong>DIP:</strong> Inyección de dependencias</li>
+                </ul>
+                
+                <h6 class="text-primary mt-3">Algoritmos:</h6>
+                <p><strong>Backtracking</strong> con validación de restricciones. Resuelve puzzles 9x9 con verificación de reglas Sudoku.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0"><i class="fas fa-graduation-cap me-2"></i>Arquitectura y Tecnologías</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Patrones Generales</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i><strong>MVC:</strong> Separación de responsabilidades</li>
+                            <li><i class="fas fa-check text-success me-2"></i><strong>Dependency Injection:</strong> Desacoplamiento</li>
+                            <li><i class="fas fa-check text-success me-2"></i><strong>Repository Pattern:</strong> Acceso a datos</li>
+                            <li><i class="fas fa-check text-success me-2"></i><strong>SOLID Principles:</strong> Código mantenible</li>
+                        </ul>
+                        
+                        <h6 class="text-primary mt-3">Algoritmos de IA</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-brain text-info me-2"></i><strong>DFS Backtracking:</strong> 8 Reinas</li>
+                            <li><i class="fas fa-brain text-info me-2"></i><strong>A* Search:</strong> 8-Puzzle</li>
+                            <li><i class="fas fa-brain text-info me-2"></i><strong>Minimax:</strong> Juego de la Galleta</li>
+                            <li><i class="fas fa-brain text-info me-2"></i><strong>Constraint Satisfaction:</strong> Sudoku</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Stack Tecnológico</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fab fa-microsoft text-info me-2"></i><strong>C# 8.0:</strong> Lenguaje principal</li>
+                            <li><i class="fab fa-microsoft text-info me-2"></i><strong>ASP.NET Core:</strong> Framework web</li>
+                            <li><i class="fas fa-code text-primary me-2"></i><strong>Razor:</strong> Motor de vistas</li>
+                            <li><i class="fab fa-bootstrap text-purple me-2"></i><strong>Bootstrap 5:</strong> UI Framework</li>
+                            <li><i class="fab fa-js-square text-warning me-2"></i><strong>JavaScript:</strong> Interactividad</li>
+                        </ul>
+                        
+                        <div class="mt-3 p-3 bg-primary bg-opacity-10 border-start border-4 border-primary">
+                            <p class="mb-1"><strong>Universidad Técnica de Ambato</strong></p>
+                            <p class="mb-0 small">Facultad de Ingeniería en Sistemas - Inteligencia Artificial</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="text-center mt-4">
+    <div class="btn-group" role="group">
+        <a href="/EightQueens" class="btn btn-uta-primary">
+            <i class="fas fa-chess-queen me-2"></i>8 Reinas
+        </a>
+        <a href="/EightPuzzle" class="btn btn-outline-primary">
+            <i class="fas fa-th-large me-2"></i>8-Puzzle
+        </a>
+        <a href="/Game" class="btn btn-outline-success">
+            <i class="fas fa-cookie-bite me-2"></i>Juego Galleta
+        </a>
+        <a href="/Sudoku" class="btn btn-outline-info">
+            <i class="fas fa-border-all me-2"></i>Sudoku
+        </a>
+    </div>
+</div>
+

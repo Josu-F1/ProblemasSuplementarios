@@ -1,0 +1,117 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="page-header">
+    <h1><i class="fas fa-gamepad text-primary me-3"></i>Juegos Suplementario</h1>
+    <p class="lead">Colección de juegos con algoritmos de inteligencia artificial</p>
+    <div class="text-center">
+        <span class="badge bg-success fs-6 me-2">
+            <i class="fas fa-brain me-1"></i>Inteligencia Artificial
+        </span>
+        <span class="badge bg-info fs-6 me-2">
+            <i class="fas fa-project-diagram me-1"></i>Algoritmos Avanzados
+        </span>
+        <span class="badge bg-warning text-dark fs-6">
+            <i class="fas fa-university me-1"></i>Universidad Técnica de Ambato
+        </span>
+    </div>
+</div>
+
+<!-- Juegos Disponibles -->
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-chess-queen text-warning fa-2x me-3"></i>
+                    <div>
+                        <h5 class="card-title mb-1">8 Reinas</h5>
+                        <p class="text-muted small mb-0">DFS Backtracking</p>
+                    </div>
+                </div>
+                <p class="card-text">Coloca 8 reinas en un tablero de ajedrez sin que se ataquen entre sí. Usa algoritmo DFS con backtracking inteligente.</p>
+                <a href="/EightQueens/Game" class="btn btn-warning">
+                    <i class="fas fa-play me-2"></i>Jugar
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-th-large text-primary fa-2x me-3"></i>
+                    <div>
+                        <h5 class="card-title mb-1">8-Puzzle</h5>
+                        <p class="text-muted small mb-0">Algoritmo A*</p>
+                    </div>
+                </div>
+                <p class="card-text">Resuelve el clásico rompecabezas deslizante usando el algoritmo A* con heurística Manhattan para encontrar la solución óptima.</p>
+                <a href="/EightPuzzle" class="btn btn-primary">
+                    <i class="fas fa-play me-2"></i>Jugar
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-cookie-bite text-success fa-2x me-3"></i>
+                    <div>
+                        <h5 class="card-title mb-1">Juego de la Galleta</h5>
+                        <p class="text-muted small mb-0">IA Minimax</p>
+                    </div>
+                </div>
+                <p class="card-text">Conecta puntos para formar cuadrados. Juega contra una IA inteligente que usa algoritmo Minimax con poda Alpha-Beta.</p>
+                <a href="/Game" class="btn btn-success">
+                    <i class="fas fa-play me-2"></i>Jugar
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-border-all text-info fa-2x me-3"></i>
+                    <div>
+                        <h5 class="card-title mb-1">Sudoku</h5>
+                        <p class="text-muted small mb-0">Backtracking</p>
+                    </div>
+                </div>
+                <p class="card-text">Resuelve puzzles Sudoku automáticamente usando backtracking con validación de restricciones. Incluye solución paso a paso.</p>
+                <a href="/Sudoku" class="btn btn-info">
+                    <i class="fas fa-play me-2"></i>Jugar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Información adicional -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title">
+                    <i class="fas fa-graduation-cap text-primary me-2"></i>Proyecto Académico
+                </h5>
+                <p class="card-text">
+                    Esta colección de juegos implementa diversos algoritmos de inteligencia artificial 
+                    como parte del curso de IA en la Universidad Técnica de Ambato.
+                </p>
+                <div class="mt-3">
+                    <a href="/EightQueens/About" class="btn btn-outline-primary">
+                        <i class="fas fa-info-circle me-2"></i>Ver Patrones de Diseño
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
