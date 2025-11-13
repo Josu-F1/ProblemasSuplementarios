@@ -4,13 +4,18 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 
 // Agregar servicios al contenedor
-// Registrar controladores (y agregar controladores del proyecto CookieGame mediante ApplicationPart)
+// Registrar controladores (y agregar controladores del proyecto CookieGame y Sudoku mediante ApplicationPart)
 builder.Services.AddControllersWithViews()
     .AddApplicationPart(typeof(Problema3_CookieGame.Controllers.GameController).Assembly)
+    .AddApplicationPart(typeof(Problema4_Sudoku.Controllers.SudokuController).Assembly)
     ;
 
 // Registrar el GameService del proyecto CookieGame (era singleton en su propio Program.cs)
 builder.Services.AddSingleton<Problema3_CookieGame.Services.GameService>();
+
+// Registrar servicios del Sudoku (DI de servicios - DIP + Strategy)
+builder.Services.AddSingleton<Problema4_Sudoku.Services.ISudokuValidator, Problema4_Sudoku.Services.SudokuValidator>();
+builder.Services.AddSingleton<Problema4_Sudoku.Services.IPuzzleProvider, Problema4_Sudoku.Services.PuzzleProvider>();
 
 var app = builder.Build();
 
@@ -34,6 +39,17 @@ if (Directory.Exists(cookieWww))
     {
         FileProvider = new PhysicalFileProvider(cookieWww),
         // Sin RequestPath para permitir las mismas rutas (~/lib, ~/css, ~/js) usadas por la vista del juego
+        RequestPath = ""
+    });
+}
+
+// Servir archivos estáticos del proyecto Problema4_Sudoku
+var sudokuWww = Path.GetFullPath(Path.Combine(app.Environment.ContentRootPath, "..", "Problema4_Sudoku", "wwwroot"));
+if (Directory.Exists(sudokuWww))
+{
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(sudokuWww),
         RequestPath = ""
     });
 }
