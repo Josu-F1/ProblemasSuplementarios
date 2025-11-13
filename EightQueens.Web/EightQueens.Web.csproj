@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EightQueens\EightQueens.csproj" />
+    <ProjectReference Include="..\Problema3_CookieGame\Problema3_CookieGame.csproj" />
   </ItemGroup>
 
 </Project>

@@ -147,6 +147,7 @@
     </style>
 </head>
 <body>
+    @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="/">
@@ -171,6 +172,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/EightPuzzle">
                             <i class="fas fa-th-large me-1"></i>8-Puzzle
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Enlace directo al juego de la galleta usando la configuración CookieGame:BaseUrl -->
+                        @{ 
+                            var cookieBase = Configuration["CookieGame:BaseUrl"] ?? "http://localhost:5147";
+                            var cookieUrl = cookieBase.TrimEnd('/') + "/Game";
+                        }
+                        <a class="nav-link" href="@cookieUrl" target="_self">
+                            <i class="fas fa-th-large me-1"></i>Juego de la Galleta
                         </a>
                     </li>
                 </ul>
